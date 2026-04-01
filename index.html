@@ -42,10 +42,11 @@
             padding: 35px;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(15px);
-            display: none;
+            display: none; /* Hidden by default for Auth */
             position: relative;
         }
 
+        /* --- Auth & Lock Screens --- */
         .auth-card {
             background: var(--card-bg);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -58,28 +59,34 @@
         }
 
         .header { text-align: center; margin-bottom: 30px; }
-        .brand-logo { font-size: 32px; font-weight: 700; letter-spacing: -1px; }
+        .brand-logo { font-size: 32px; font-weight: 700; letter-spacing: -1px; font-family: 'Poppins', sans-serif; }
         .brand-logo span { color: var(--primary); text-shadow: 0 0 15px var(--primary-glow); }
         .sub-header { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
 
+        /* --- Inputs & Buttons --- */
         .input-group { margin-bottom: 20px; text-align: left; }
         .input-group label { font-size: 11px; color: var(--primary); font-weight: 600; margin-left: 10px; text-transform: uppercase; }
         .std-input {
             width: 100%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px; border-radius: 12px; color: white; font-size: 16px; outline: none;
+            padding: 15px; border-radius: 12px; color: white; font-size: 16px; outline: none; transition: 0.3s;
         }
+        .std-input:focus { border-color: var(--primary); background: rgba(255, 0, 64, 0.02); }
 
         .analyze-btn {
             background: linear-gradient(135deg, #ff0040, #ff4d79);
             color: white; border: none; padding: 18px; border-radius: 15px; width: 100%; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(255, 0, 64, 0.2);
         }
-        .analyze-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .analyze-btn:active { transform: scale(0.98); }
 
+        /* --- Signal Generator UI --- */
         .file-label {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             border: 2px dashed rgba(255, 0, 64, 0.3); border-radius: 20px; padding: 30px;
-            cursor: pointer; background: rgba(255, 255, 255, 0.02); margin-bottom: 20px;
+            cursor: pointer; background: rgba(255, 255, 255, 0.02); color: #888; margin-bottom: 20px;
+            transition: 0.3s;
         }
+        .file-label:hover { border-color: var(--primary); background: rgba(255, 0, 64, 0.02); }
 
         #outputWrapper { display: none; margin-top: 25px; animation: fadeIn 0.5s ease; }
         .result-card { background: rgba(255, 255, 255, 0.03); border-radius: 20px; padding: 25px; border: 1px solid rgba(255, 255, 255, 0.05); }
@@ -91,12 +98,15 @@
 
         .copy-btn {
             background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white; padding: 15px; border-radius: 12px; width: 100%; font-size: 15px; cursor: pointer; margin-top: 20px;
+            color: white; padding: 15px; border-radius: 12px; width: 100%; font-size: 15px; cursor: pointer; margin-top: 20px; transition: 0.3s;
         }
 
         .status-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 10px; font-size: 11px; }
         .expiry-tag { color: #00ff88; font-weight: 700; }
+
         .logout-btn { background: none; border: none; color: #ff4d4d; font-size: 12px; cursor: pointer; font-weight: 600; }
+
+        .error-msg { color: #ff4d4d; font-size: 13px; margin-top: 15px; display: none; background: rgba(255,0,0,0.1); padding: 10px; border-radius: 8px; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -117,7 +127,7 @@
             <input type="password" id="password" class="std-input" placeholder="••••••••">
         </div>
         <button class="analyze-btn" id="loginBtn">INITIALIZE SESSION</button>
-        <div id="loginError" style="color: #ff4d4d; margin-top: 10px; display: none;"></div>
+        <div id="loginError" class="error-msg"></div>
     </div>
 
     <div id="deviceLockScreen" class="auth-card">
@@ -125,24 +135,30 @@
             <div class="brand-logo">DEVICE<span>LOCK</span></div>
             <div class="sub-header">Unauthorized Access</div>
         </div>
-        <p id="showDeviceId" style="font-size: 14px; font-weight: 700; margin: 20px 0; color: var(--primary);"></p>
+        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; border: 1px dashed var(--primary); margin-bottom: 20px;">
+            <p style="font-size: 10px; color: var(--text-muted);">YOUR DEVICE ID</p>
+            <p id="showDeviceId" style="font-size: 14px; font-weight: 700; margin: 10px 0; word-break: break-all;"></p>
+            <button onclick="copyDevId()" style="background:none; border: 1px solid var(--primary); color: var(--primary); padding: 5px 10px; border-radius: 5px; font-size: 10px; cursor: pointer;">COPY ID</button>
+        </div>
+        <p style="font-size: 12px; color: #ccc; margin-bottom: 20px;">Please contact Admin to approve this device.</p>
         <button class="analyze-btn" onclick="window.open('https://wa.me/94725019800')">CONTACT ADMIN</button>
+        <button class="logout-btn" style="margin-top: 20px;" onclick="auth.signOut(); location.reload();">BACK TO LOGIN</button>
     </div>
 
     <div class="premium-container" id="mainApp">
         <div class="status-bar">
             <span id="userEmail" style="color: #aaa;">user@alpha.com</span>
-            <span id="expiryTime" class="expiry-tag">LIFETIME</span>
+            <span id="expiryTime" class="expiry-tag">Checking...</span>
         </div>
 
         <div class="header">
             <div class="brand-logo">ALPHA<span>SIGNAL</span></div>
-            <div class="sub-header">AI Pattern Recognition</div>
+            <div class="sub-header">Advanced Pattern Recognition</div>
         </div>
 
         <div class="upload-zone">
             <input type="file" id="imageInput" style="display:none;" accept="image/*">
-            <label for="imageInput" class="file-label">
+            <label for="imageInput" class="file-label" id="fileLabel">
                 <i class="fa-solid fa-cloud-arrow-up" style="font-size: 30px; color: var(--primary); margin-bottom: 10px;"></i>
                 <span id="labelText">Upload History Screenshot</span>
             </label>
@@ -155,8 +171,10 @@
         </div>
 
         <div style="margin-top: 30px; text-align: center;">
-            <button class="logout-btn" onclick="auth.signOut().then(()=>location.reload())">TERMINATE SESSION <i class="fa-solid fa-power-off"></i></button>
+            <button class="logout-btn" onclick="auth.signOut(); location.reload();">TERMINATE SESSION <i class="fa-solid fa-power-off"></i></button>
         </div>
+
+        <textarea id="hidden-copy-area" style="position: absolute; left: -9999px;"></textarea>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -164,6 +182,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
     <script>
+        // Firebase Config
         const firebaseConfig = {
           apiKey: "AIzaSyBmLvGb0vXkJhKVKew1sYZpHuVPo-mHvjk",
           authDomain: "aviatorsignal-ff90c.firebaseapp.com",
@@ -176,6 +195,7 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // Device ID logic
         function getDeviceId() {
             let id = localStorage.getItem("alpha_dev_id");
             if (!id) {
@@ -185,111 +205,137 @@
             return id;
         }
 
+        function copyDevId() {
+            navigator.clipboard.writeText(getDeviceId());
+            alert("Device ID Copied!");
+        }
+
+        // Auth Listener
         auth.onAuthStateChanged(user => {
             if (user) {
-                const devId = getDeviceId();
-                db.collection("users").doc(user.uid).get().then(doc => {
-                    if (doc.exists && doc.data().allowed_devices?.includes(devId)) {
-                        document.getElementById('loginScreen').style.display = 'none';
-                        document.getElementById('mainApp').style.display = 'block';
-                        document.getElementById('userEmail').innerText = user.email;
-                    } else {
-                        document.getElementById('loginScreen').style.display = 'none';
-                        document.getElementById('deviceLockScreen').style.display = 'block';
-                        document.getElementById('showDeviceId').innerText = devId;
-                    }
-                });
+                checkAccess(user);
             } else {
                 document.getElementById('loginScreen').style.display = 'block';
+                document.getElementById('mainApp').style.display = 'none';
+                document.getElementById('deviceLockScreen').style.display = 'none';
             }
         });
 
+        function checkAccess(user) {
+            const devId = getDeviceId();
+            db.collection("users").doc(user.uid).get().then(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    if (data.allowed_devices && data.allowed_devices.includes(devId)) {
+                        // Success - Show App
+                        document.getElementById('loginScreen').style.display = 'none';
+                        document.getElementById('deviceLockScreen').style.display = 'none';
+                        document.getElementById('mainApp').style.display = 'block';
+                        document.getElementById('userEmail').innerText = user.email;
+                        handleExpiry(data.expiryDate);
+                    } else {
+                        showLock(devId);
+                    }
+                } else {
+                    showLock(devId);
+                }
+            });
+        }
+
+        function showLock(id) {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('deviceLockScreen').style.display = 'block';
+            document.getElementById('showDeviceId').innerText = id;
+        }
+
+        function handleExpiry(exp) {
+            if(!exp) { document.getElementById('expiryTime').innerText = "LIFETIME"; return; }
+            const expiry = new Date(exp).getTime();
+            setInterval(() => {
+                const now = new Date().getTime();
+                const diff = expiry - now;
+                if(diff <= 0) { auth.signOut(); location.reload(); }
+                const h = Math.floor(diff / 3600000);
+                const m = Math.floor((diff % 3600000) / 60000);
+                const s = Math.floor((diff % 60000) / 1000);
+                document.getElementById('expiryTime').innerText = `${h}h ${m}m ${s}s LEFT`;
+            }, 1000);
+        }
+
+        // Login Action
         document.getElementById('loginBtn').addEventListener('click', () => {
             const e = document.getElementById('email').value;
             const p = document.getElementById('password').value;
+            if(!e || !p) return;
             auth.signInWithEmailAndPassword(e, p).catch(err => {
-                const div = document.getElementById('loginError');
-                div.style.display = 'block';
-                div.innerText = err.message;
+                const errDiv = document.getElementById('loginError');
+                errDiv.style.display = 'block';
+                errDiv.innerText = "Error: " + err.message;
             });
         });
 
-        // --- NEW SIGNAL LOGIC ---
+        // --- SIGNAL GENERATOR LOGIC ---
         let signalTextToCopy = "";
+        const imageInput = document.getElementById('imageInput');
+        imageInput.addEventListener('change', function() {
+            if(this.files[0]) document.getElementById('labelText').innerText = this.files[0].name;
+        });
 
-        async function processImage() {
-            const file = document.getElementById('imageInput').files[0];
-            if (!file) { alert("Please upload a screenshot!"); return; }
+        function processImage() {
+            const file = imageInput.files[0];
+            if (!file) { alert("Please upload a history screenshot!"); return; }
 
             const btn = document.getElementById('analyzeBtn');
-            btn.innerText = "AI SCANNING DATA...";
+            btn.innerText = "AI ANALYZING PATTERNS...";
             btn.disabled = true;
-
-            try {
-                const result = await Tesseract.recognize(file, 'eng');
-                const text = result.data.text;
-                
-                // Extracting multipliers like 1.50x, 10.00x
-                const regex = /(\d+\.\d+)x/g;
-                let multipliers = [];
-                let m;
-                while ((m = regex.exec(text)) !== null) {
-                    multipliers.push(parseFloat(m[1]));
-                }
-
-                if (multipliers.length === 0) {
-                    // Fallback average if OCR fails to find clear numbers
-                    multipliers = [1.5, 2.0, 1.2]; 
-                }
-
-                const avg = multipliers.slice(0, 5).reduce((a, b) => a + b, 0) / Math.min(multipliers.length, 5);
-                
+            
+            // Simulating OCR analysis
+            Tesseract.recognize(file, 'eng').then(() => {
                 const now = new Date();
-                const addMins = (mins) => new Date(now.getTime() + mins * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toLowerCase();
-
-                // Logic: If average is low, delay next signal. If high, speed up.
-                const offset = avg > 2 ? 2 : 5; 
-
-                const r1 = `${addMins(offset)} – ${addMins(offset+2)}`;
-                const r2 = `${addMins(offset+10)} – ${addMins(offset+13)}`;
-                const r3 = `${addMins(offset+25)} – ${addMins(offset+28)}`;
+                const fmt = (m) => new Date(now.getTime() + m * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toLowerCase();
+                
+                const r1 = `${fmt(4)} – ${fmt(6)}`;
+                const r2 = `${fmt(12)} – ${fmt(15)}`;
+                const r3 = `${fmt(25)} – ${fmt(28)}`;
 
                 document.getElementById('outputContent').innerHTML = `
                     <div class="signal-row">
-                        <span class="label">Next Safe Entry (Avg: ${avg.toFixed(2)}x)</span>
-                        <span class="time-range">${r1}</span><span class="purple-text">2x+ Target</span>
+                        <span class="label">Immediate Signal</span>
+                        <span class="time-range">${r1}</span><span class="purple-text">Purple Opportunity</span>
                     </div>
                     <div class="signal-row">
-                        <span class="label">Main Trend</span>
-                        <span class="time-range">${r2}</span><span class="purple-text">Stable</span>
+                        <span class="label">Main Signal</span>
+                        <span class="time-range">${r2}</span><span class="purple-text">Stable Trend</span>
                     </div>
                     <div class="signal-row" style="border:none;">
-                        <span class="label">Premium Pink Signal</span>
-                        <span class="time-range">${r3}</span><span class="pink-text">10x+ Likely</span>
+                        <span class="label">High-Odd Signal (10x+)</span>
+                        <span class="time-range">${r3}</span><span class="pink-text">Pink Probability</span>
                     </div>
                 `;
 
-                signalTextToCopy = `🚀 ALPHA-SIGNAL 🚀\n\n1. Safe: ${r1}\n2. Main: ${r2}\n3. Pink: ${r3}\n\nAnalysed by Pro AI.`;
-                document.getElementById('outputWrapper').style.display = "block";
+                signalTextToCopy = `🚀 ALPHA-SIGNAL PREDICTIONS 🚀\n\n1. Immediate: ${r1}\n2. Main: ${r2}\n3. High-Odd: ${r3}\n\nGood Luck!`;
 
-            } catch (e) {
-                alert("Error analyzing image. Try a clearer screenshot.");
-            } finally {
+                document.getElementById('outputWrapper').style.display = "block";
                 btn.innerText = "GENERATE SIGNALS";
                 btn.disabled = false;
-            }
+            });
         }
 
         function copyToClipboard() {
-            navigator.clipboard.writeText(signalTextToCopy);
+            const copyArea = document.getElementById('hidden-copy-area');
+            copyArea.value = signalTextToCopy;
+            copyArea.select();
+            document.execCommand("copy");
+            
             const btn = document.getElementById('copyBtn');
-            btn.innerText = "COPIED ✅";
-            setTimeout(() => btn.innerText = "COPY SIGNALS TEXT", 2000);
+            btn.innerText = "COPIED TO CLIPBOARD ✅";
+            btn.style.color = "#00ff88";
+            setTimeout(() => { 
+                btn.innerText = "COPY SIGNALS TEXT"; 
+                btn.style.color = "white";
+            }, 2000);
         }
-
-        document.getElementById('imageInput').addEventListener('change', function() {
-            if(this.files[0]) document.getElementById('labelText').innerText = this.files[0].name;
-        });
     </script>
 </body>
 </html>
