@@ -3,31 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALPHA-SIGNAL | User Access</title>
+    <title>ALPHA-SIGNAL | Universal Access</title>
+    <script src="https://openfpcdn.io/fingerprintjs/v4"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* --- කලින් තිබූ Styles එලෙසම පවත්වා ගෙන ඇත --- */
+        /* --- Styles පෙර පරිදිම පවතී --- */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
         body {
-            background-color: #060608;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+            background-color: #060608; color: #ffffff;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; padding: 20px;
             background-image: radial-gradient(circle at 50% -20%, #1a1a24 0%, #060608 70%);
         }
         .premium-container {
-            background: rgba(16, 16, 20, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 28px;
-            width: 100%;
-            max-width: 520px;
-            padding: 40px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(15px);
+            background: rgba(16, 16, 20, 0.95); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 28px; width: 100%; max-width: 520px; padding: 40px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6); backdrop-filter: blur(15px);
         }
         .header { text-align: center; margin-bottom: 35px; }
         .brand-logo { font-size: 32px; font-weight: 700; letter-spacing: -1px; }
@@ -35,7 +28,7 @@
         .sub-header { font-size: 11px; color: #9090a0; text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
         
         #loginSection, #deviceVerifySection, #mainAppSection { display: none; }
-        #loginSection { display: block; } /* මුලින්ම පෙන්වන්නේ මෙයයි */
+        #loginSection { display: block; }
 
         .input-group { margin-bottom: 20px; text-align: left; }
         .input-group label { display: block; font-size: 12px; color: #888; margin-bottom: 8px; }
@@ -53,44 +46,23 @@
             width: 100%; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s;
         }
 
-        /* Device ID Display Styles */
         .device-box {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255, 0, 64, 0.2);
+            background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 15px;
+            text-align: center; margin-bottom: 20px; border: 1px solid rgba(255, 0, 64, 0.2);
         }
         .device-id-text {
-            font-family: 'Space Mono', monospace;
-            font-size: 18px;
-            color: #ff0040;
-            display: block;
-            margin: 10px 0;
-            word-break: break-all;
+            font-family: 'Space Mono', monospace; font-size: 16px;
+            color: #ff0040; display: block; margin: 10px 0; word-break: break-all;
         }
+        .status-loader { font-size: 13px; color: #00f2ff; margin-bottom: 10px; display: block; }
 
-        /* App Styles එලෙසම පවතී */
-        .file-label {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            border: 2px dashed rgba(255, 0, 64, 0.3); border-radius: 20px;
-            padding: 30px; cursor: pointer; background: rgba(255, 255, 255, 0.02);
-            color: #888; margin-bottom: 15px;
-        }
-        .copy-btn {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white; padding: 15px; border-radius: 12px; width: 100%; 
-            font-size: 15px; cursor: pointer; margin-top: 20px; display: none; transition: 0.3s;
-        }
+        /* App Logic Styles */
         #outputWrapper { display: none; margin-top: 30px; }
         .result-card { background: rgba(255, 255, 255, 0.03); border-radius: 20px; padding: 25px; border: 1px solid rgba(255, 255, 255, 0.05); }
         .signal-row { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-        .label { font-size: 12px; color: #aaa; text-transform: uppercase; }
         .time-range { font-family: 'Space Mono', monospace; font-size: 20px; font-weight: 700; color: #fff; display: block; }
         .purple-text { color: #a333ff; }
         .pink-text { color: #ff0040; }
-
         #hidden-copy-area { position: absolute; left: -9999px; }
     </style>
 </head>
@@ -99,7 +71,7 @@
     <div class="premium-container">
         <div class="header">
             <div class="brand-logo">ALPHA<span>SIGNAL</span></div>
-            <div class="sub-header" id="dynamicSub">Secure Access</div>
+            <div class="sub-header" id="dynamicSub">Secure Multi-Browser Access</div>
         </div>
 
         <div id="loginSection">
@@ -115,28 +87,26 @@
             <button class="action-btn" id="loginBtn" onclick="handleLogin()">LOGIN TO SYSTEM</button>
         </div>
 
-        <div id="deviceVerifySection">
+        <div id="deviceVerifySection" style="text-align: center;">
             <div class="device-box">
-                <p style="font-size: 12px; color: #888;">YOUR UNIQUE DEVICE ID:</p>
-                <span id="displayDevID" class="device-id-text">---</span>
+                <p style="font-size: 12px; color: #888;">YOUR HARDWARE ID:</p>
+                <span id="displayDevID" class="device-id-text">GENERATING...</span>
                 <button onclick="copyDeviceID()" style="background: none; border: 1px solid #444; color: #aaa; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 10px;">COPY ID</button>
             </div>
-            <p id="deviceStatusMsg" style="font-size: 12px; color: #ff4d79; margin-bottom: 15px; text-align: center;"></p>
-            <button class="action-btn" onclick="checkDeviceAccess()">ENTER DASHBOARD</button>
+            <span class="status-loader">⌛ Waiting for Admin Activation...</span>
+            <p style="font-size: 11px; color: #555;">This ID remains same on any browser of this device.</p>
         </div>
 
         <div id="mainAppSection">
-            <div class="upload-zone">
-                <input type="file" id="imageInput" style="display:none;" accept="image/*">
-                <label for="imageInput" class="file-label" id="fileLabel">
-                    <span id="labelText">Upload History Screenshot</span>
-                </label>
-                <button class="action-btn" id="analyzeBtn" onclick="processImage()">Generate Signals</button>
-            </div>
+            <input type="file" id="imageInput" style="display:none;" accept="image/*">
+            <label for="imageInput" style="display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px dashed rgba(255, 0, 64, 0.3); border-radius: 20px; padding: 30px; cursor: pointer; background: rgba(255, 255, 255, 0.02); color: #888; margin-bottom: 15px;">
+                <span id="labelText">Upload History Screenshot</span>
+            </label>
+            <button class="action-btn" id="analyzeBtn" onclick="processImage()">Generate Signals</button>
 
             <div id="outputWrapper">
                 <div class="result-card" id="outputContent"></div>
-                <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">Copy Signals Text</button>
+                <button class="action-btn" id="copyBtn" onclick="copyToClipboard()" style="margin-top: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">Copy Signals Text</button>
             </div>
         </div>
 
@@ -162,21 +132,20 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Device ID එකක් සෑදීම
-        function getDeviceID() {
-            let id = localStorage.getItem('alpha_dev_id');
-            if(!id) {
-                id = 'ALPHA-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-                localStorage.setItem('alpha_dev_id', id);
-            }
-            return id;
+        let MY_DEVICE_ID = "";
+        let unsub = null;
+
+        // --- බව්සර් එක කුමක් වුවත් එකම ID එකක් ලබා ගැනීම ---
+        async function initFingerprint() {
+            const fpPromise = FingerprintJS.load();
+            const fp = await fpPromise;
+            const result = await fp.get();
+            // visitorId යනු එම උපකරණයට ආවේණික අංකයයි
+            MY_DEVICE_ID = "ALPHA-" + result.visitorId.toUpperCase();
+            document.getElementById('displayDevID').innerText = MY_DEVICE_ID;
         }
-        const MY_DEVICE_ID = getDeviceID();
-        document.getElementById('displayDevID').innerText = MY_DEVICE_ID;
+        initFingerprint();
 
-        let currentUserDoc = null;
-
-        // 1. මුලින්ම Email/Pass ලොගින් එක
         async function handleLogin() {
             const email = document.getElementById('userEmail').value.trim();
             const pass = document.getElementById('userPass').value.trim();
@@ -187,69 +156,46 @@
 
             try {
                 const userCred = await auth.signInWithEmailAndPassword(email, pass);
-                // සාර්ථක නම් ඊළඟ පියවරට (Device පෙන්වන තැනට) යනවා
+                const uid = userCred.user.uid;
+
                 document.getElementById('loginSection').style.display = 'none';
                 document.getElementById('deviceVerifySection').style.display = 'block';
-                document.getElementById('dynamicSub').innerText = "Device Authorization";
+
+                // Real-time Check
+                unsub = db.collection("users").doc(uid).onSnapshot((doc) => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        const allowed = data.allowed_devices || [];
+                        if (allowed.includes(MY_DEVICE_ID)) {
+                            if (data.expiryDate && new Date(data.expiryDate) > new Date()) {
+                                enterApp();
+                            }
+                        }
+                    }
+                });
             } catch (err) {
-                showError("Invalid Email or Password");
+                showError("Invalid Credentials");
             } finally {
                 btn.innerText = "LOGIN TO SYSTEM";
             }
         }
 
-        // 2. Device ID එක Copy කරගැනීම
-        function copyDeviceID() {
-            navigator.clipboard.writeText(MY_DEVICE_ID).then(() => {
-                alert("Device ID Copied! Send this to Admin.");
-            });
-        }
-
-        // 3. පද්ධතියට ඇතුළු වීමට පෙර Device එක පරීක්ෂා කිරීම
-        async function checkDeviceAccess() {
-            const uid = auth.currentUser.uid;
-            const statusMsg = document.getElementById('deviceStatusMsg');
-
-            try {
-                const doc = await db.collection("users").doc(uid).get();
-                if(!doc.exists) return;
-                const data = doc.data();
-
-                // Expiry Check
-                if(data.expiryDate && new Date(data.expiryDate) < new Date()) {
-                    statusMsg.innerText = "Your account has expired!";
-                    return;
-                }
-
-                // Device ID Check
-                let allowed = data.allowed_devices || [];
-                if(allowed.length === 0) {
-                    // පළමු වරට නම් මේ Device එක Register කරනවා
-                    await db.collection("users").doc(uid).update({ allowed_devices: [MY_DEVICE_ID] });
-                    enterApp();
-                } else if(allowed.includes(MY_DEVICE_ID)) {
-                    enterApp();
-                } else {
-                    statusMsg.innerText = "This Device is not authorized!";
-                }
-            } catch (e) {
-                statusMsg.innerText = "Error checking access.";
-            }
-        }
-
         function enterApp() {
+            if(unsub) unsub();
             document.getElementById('deviceVerifySection').style.display = 'none';
             document.getElementById('mainAppSection').style.display = 'block';
-            document.getElementById('dynamicSub').innerText = "AI Signal Analyser Active";
+        }
+
+        function copyDeviceID() {
+            navigator.clipboard.writeText(MY_DEVICE_ID).then(() => { alert("Device ID Copied!"); });
         }
 
         function showError(msg) {
             const err = document.getElementById('loginError');
-            err.innerText = msg;
-            err.style.display = 'block';
+            err.innerText = msg; err.style.display = 'block';
         }
 
-        // --- කලින් තිබූ Signal Processing Logic එලෙසම පවතී ---
+        // --- Signal Generator Logic ---
         let signalTextToCopy = "";
         function processImage() {
             const file = document.getElementById('imageInput').files[0];
@@ -264,24 +210,21 @@
                 const r3 = `${fmt(25)} – ${fmt(28)}`;
 
                 document.getElementById('outputContent').innerHTML = `
-                    <div class="signal-row"><span class="label">Immediate</span><span class="time-range">${r1}</span><span class="purple-text">Purple Opportunity</span></div>
-                    <div class="signal-row"><span class="label">Main</span><span class="time-range">${r2}</span><span class="purple-text">Stable Trend</span></div>
-                    <div class="signal-row"><span class="label">High-Odd (10x+)</span><span class="time-range">${r3}</span><span class="pink-text">Pink Probability</span></div>
+                    <div class="signal-row"><span class="time-range">${r1}</span><span class="purple-text">Purple</span></div>
+                    <div class="signal-row"><span class="time-range">${r2}</span><span class="purple-text">Stable</span></div>
+                    <div class="signal-row"><span class="time-range">${r3}</span><span class="pink-text">Pink (10x)</span></div>
                 `;
-                signalTextToCopy = `🚀 ALPHA-SIGNAL PREDICTIONS 🚀\n\n1. Immediate: ${r1}\n2. Main: ${r2}\n3. High-Odd: ${r3}`;
+                signalTextToCopy = `ALPHA-SIGNAL:\n1. ${r1}\n2. ${r2}\n3. ${r3}`;
                 document.getElementById('outputWrapper').style.display = "block";
-                document.getElementById('copyBtn').style.display = "block";
                 document.getElementById('analyzeBtn').innerText = "Generate Signals";
             });
         }
 
         function copyToClipboard() {
             const copyArea = document.getElementById('hidden-copy-area');
-            copyArea.value = signalTextToCopy;
-            copyArea.select();
+            copyArea.value = signalTextToCopy; copyArea.select();
             navigator.clipboard.writeText(signalTextToCopy).then(() => {
-                document.getElementById('copyBtn').innerText = "COPIED ✅";
-                setTimeout(() => document.getElementById('copyBtn').innerText = "Copy Signals Text", 2000);
+                alert("Signals Copied!");
             });
         }
     </script>
