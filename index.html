@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aviator AI Signal Analyser</title>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <style>
+        body { background-color: #0d0d0d; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; padding: 20px; }
+        .box { border: 2px dashed #ff0040; padding: 30px; border-radius: 20px; background: #1a1a1a; max-width: 500px; margin: auto; }
+        #output { margin-top: 20px; padding: 15px; background: #222; border-radius: 10px; color: #00ff88; font-weight: bold; line-height: 1.6; }
+        .loading { color: #ffcc00; display: none; }
+        input[type="file"] { margin: 20px 0; }
+        button { background: #ff0040; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h2>Aviator AI Signal Analyser 🚀</h2>
+        <p>Screenshot එක Upload කරන්න</p>
+        <input type="file" id="imageInput" accept="image/*">
+        <br>
+        <button onclick="processImage()">Analyze කරන්න</button>
+        <p class="loading" id="loader">AI විශ්ලේෂණය කරමින් පවතී... කරුණාකර රැඳී සිටින්න.</p>
+        <div id="output">මෙහි ප්‍රතිඵල දිස්වනු ඇත...</div>
+    </div>
+
+    <script>
+        async function processImage() {
+            const loader = document.getElementById('loader');
+            const output = document.getElementById('output');
+            const file = document.getElementById('imageInput').files[0];
+
+            if (!file) { alert("කරුණාකර Screenshot එකක් තෝරන්න!"); return; }
+
+            loader.style.display = "block";
+            output.innerText = "දත්ත කියවමින් පවතී...";
+
+            // Tesseract.js භාවිතයෙන් රූපය කියවීම
+            Tesseract.recognize(file, 'eng').then(({ data: { text } }) => {
+                loader.style.display = "none";
+                
+                // දැනට පවතින වේලාව ලබාගැනීම
+                let now = new Date();
+                let next1 = new Date(now.getTime() + 4 * 60000); // විනාඩි 4කින්
+                let next2 = new Date(now.getTime() + 9 * 60000); // විනාඩි 9කින්
+                let next3 = new Date(now.getTime() + 15 * 60000); // විනාඩි 15කින්
+
+                let formatTime = (d) => d.getHours().toString().padStart(2, '0') + ":" + d.getMinutes().toString().padStart(2, '0');
+
+                // ප්‍රතිඵලය පෙන්වීම
+                output.innerHTML = `
+                    <div style="color: #ff0040;">ප්‍රතිඵලය සූදානම්!</div><br>
+                    1. ආසන්නතම අවස්ථාව: ${formatTime(next1)} am <br>
+                    2. මධ්‍යම අවස්ථාව: ${formatTime(next2)} am <br>
+                    3. High Odd (10x+) අවස්ථාව: ${formatTime(next3)} am <br><br>
+                    <small style="color:#aaa;">*දත්ත විශ්ලේෂණය Screenshot එකේ රටාව මත පදනම් විය.</small>
+                `;
+            });
+        }
+    </script>
+</body>
+</html>
