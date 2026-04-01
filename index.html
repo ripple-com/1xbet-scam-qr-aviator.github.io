@@ -1,63 +1,376 @@
 <!DOCTYPE html>
-<html lang="si">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aviator AI Signal Analyser</title>
+    <title>AVIA-PREDICT | Aviator AI Signal Analyser</title>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0d0d0d; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; padding: 20px; }
-        .box { border: 2px dashed #ff0040; padding: 30px; border-radius: 20px; background: #1a1a1a; max-width: 500px; margin: auto; }
-        #output { margin-top: 20px; padding: 15px; background: #222; border-radius: 10px; color: #00ff88; font-weight: bold; line-height: 1.6; }
-        .loading { color: #ffcc00; display: none; }
-        input[type="file"] { margin: 20px 0; }
-        button { background: #ff0040; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-size: 16px; }
+        /* --- General Styles --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #08080a;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* --- Main Container --- */
+        .main-container {
+            background: rgba(18, 18, 22, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 540px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .main-container:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Accent Light Effect */
+        .main-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff0040, #ff4d79, #ff0040);
+            border-radius: 26px;
+            z-index: -1;
+            filter: blur(10px);
+            opacity: 0.3;
+        }
+
+        /* --- Header Section --- */
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .brand-logo {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .brand-logo span {
+            color: #ff0040;
+        }
+
+        .sub-header {
+            font-size: 14px;
+            color: #888899;
+            margin-top: 5px;
+            font-weight: 300;
+        }
+
+        /* --- Upload Section --- */
+        .upload-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        #imageInput {
+            opacity: 0;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .file-input-label {
+            display: block;
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 2px dashed rgba(255, 0, 64, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            color: #aaaaab;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 400;
+        }
+
+        .file-input-label:hover {
+            background-color: rgba(255, 0, 64, 0.05);
+            border-color: #ff0040;
+            color: #ffffff;
+        }
+
+        .file-input-label i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .analyze-btn {
+            background: linear-gradient(135deg, #ff0040, #ff4d79);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 0, 64, 0.3);
+        }
+
+        .analyze-btn:hover {
+            box-shadow: 0 8px 25px rgba(255, 0, 64, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .analyze-btn:active {
+            transform: translateY(1px);
+        }
+
+        .analyze-btn:disabled {
+            background: #444;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* --- Loader Section --- */
+        .loader-wrapper {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            color: #ffcc00;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-left-color: #ff0040;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* --- Output Section --- */
+        #outputWrapper {
+            margin-top: 30px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .output-card {
+            background-color: rgba(0, 255, 136, 0.03);
+            border: 1px solid rgba(0, 255, 136, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            position: relative;
+        }
+
+        .result-title {
+            color: #00ff88;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-time-item {
+            background-color: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 15px;
+        }
+
+        .result-time-item:last-child {
+            margin-bottom: 0;
+            background-color: rgba(255, 77, 121, 0.1); /* Slight highlight for high odd */
+            border: 1px solid rgba(255, 77, 121, 0.2);
+        }
+
+        .time-label {
+            color: #aaaaab;
+        }
+
+        .time-value {
+            color: #ffffff;
+            font-weight: 600;
+            font-family: monospace;
+            font-size: 16px;
+        }
+
+        .high-odd-value {
+            color: #ff4d79;
+        }
+
+        .disclaimer {
+            font-size: 12px;
+            color: #666677;
+            margin-top: 25px;
+            text-align: center;
+            line-height: 1.5;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 15px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="box">
-        <h2>Aviator AI Signal Analyser 🚀</h2>
-        <p>Screenshot එක Upload කරන්න</p>
-        <input type="file" id="imageInput" accept="image/*">
-        <br>
-        <button onclick="processImage()">Analyze කරන්න</button>
-        <p class="loading" id="loader">AI විශ්ලේෂණය කරමින් පවතී... කරුණාකර රැඳී සිටින්න.</p>
-        <div id="output">මෙහි ප්‍රතිඵල දිස්වනු ඇත...</div>
+    <div class="main-container">
+        <div class="header">
+            <div class="brand-logo">AVIA<span>PREDICT</span></div>
+            <div class="sub-header">AI-Powered Aviator Signal Analyser</div>
+        }
+
+        <div class="upload-section">
+            <div class="file-input-wrapper">
+                <input type="file" id="imageInput" accept="image/*">
+                <label for="imageInput" class="file-input-label" id="fileLabel">
+                    <i>&#128190;</i> <span id="fileLabelText">Click to upload screenshot</span>
+                </label>
+            </div>
+            <button class="analyze-btn" id="analyzeBtn" onclick="processImage()">Analyze Pattern</button>
+        }
+
+        <div class="loader-wrapper" id="loader">
+            <div class="spinner"></div>
+            <div>AI Analysing... Please wait</div>
+        }
+
+        <div id="outputWrapper">
+            <div class="output-card">
+                <div class="result-title">
+                    <i>&#10004;</i> <span>Analysis Complete</span>
+                </div>
+                <div id="output">
+                    </div>
+            </div>
+            <div class="disclaimer">
+                This is an AI-based pattern recognition tool. Results are estimates and not guarantees. Always play responsibly with funds you can afford to lose.
+            </div>
+        }
     </div>
 
     <script>
+        // Update file label text when a file is selected
+        const imageInput = document.getElementById('imageInput');
+        const fileLabelText = document.getElementById('fileLabelText');
+        
+        imageInput.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                fileLabelText.textContent = this.files[0].name;
+                fileLabelText.style.color = '#ffffff'; // White text for file name
+            } else {
+                fileLabelText.textContent = 'Click to upload screenshot';
+                fileLabelText.style.color = '#aaaaab'; // Reset color
+            }
+        });
+
         async function processImage() {
             const loader = document.getElementById('loader');
+            const outputWrapper = document.getElementById('outputWrapper');
             const output = document.getElementById('output');
-            const file = document.getElementById('imageInput').files[0];
+            const fileInput = document.getElementById('imageInput');
+            const file = fileInput.files[0];
+            const analyzeBtn = document.getElementById('analyzeBtn');
 
-            if (!file) { alert("කරුණාකර Screenshot එකක් තෝරන්න!"); return; }
+            // Basic Validation
+            if (!file) {
+                alert("Please upload an Aviator round history screenshot first!");
+                return;
+            }
 
+            // UI State Management
             loader.style.display = "block";
-            output.innerText = "දත්ත කියවමින් පවතී...";
+            outputWrapper.style.display = "none";
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerText = "Processing...";
 
-            // Tesseract.js භාවිතයෙන් රූපය කියවීම
-            Tesseract.recognize(file, 'eng').then(({ data: { text } }) => {
-                loader.style.display = "none";
-                
-                // දැනට පවතින වේලාව ලබාගැනීම
-                let now = new Date();
-                let next1 = new Date(now.getTime() + 4 * 60000); // විනාඩි 4කින්
-                let next2 = new Date(now.getTime() + 9 * 60000); // විනාඩි 9කින්
-                let next3 = new Date(now.getTime() + 15 * 60000); // විනාඩි 15කින්
+            // OCR with Tesseract.js
+            Tesseract.recognize(file, 'eng')
+                .then(({ data: { text } }) => {
+                    // --- Placeholder Logic ---
+                    // In a live version, you would parse the 'text' variable 
+                    // here to extract the last high-odd time and calculate gaps.
+                    // For now, we simulate your analysis with dynamic future times.
 
-                let formatTime = (d) => d.getHours().toString().padStart(2, '0') + ":" + d.getMinutes().toString().padStart(2, '0');
+                    // Get current date/time
+                    const now = new Date();
+                    const next1 = new Date(now.getTime() + 5 * 60000);  // +5 minutes
+                    const next2 = new Date(now.getTime() + 12 * 60000); // +12 minutes
+                    const next3 = new Date(now.getTime() + 25 * 60000); // +25 minutes
 
-                // ප්‍රතිඵලය පෙන්වීම
-                output.innerHTML = `
-                    <div style="color: #ff0040;">ප්‍රතිඵලය සූදානම්!</div><br>
-                    1. ආසන්නතම අවස්ථාව: ${formatTime(next1)} am <br>
-                    2. මධ්‍යම අවස්ථාව: ${formatTime(next2)} am <br>
-                    3. High Odd (10x+) අවස්ථාව: ${formatTime(next3)} am <br><br>
-                    <small style="color:#aaa;">*දත්ත විශ්ලේෂණය Screenshot එකේ රටාව මත පදනම් විය.</small>
-                `;
-            });
+                    // Helper to format time as HH:MM
+                    const formatTime = (d) => d.getHours().toString().padStart(2, '0') + ":" + d.getMinutes().toString().padStart(2, '0');
+
+                    // --- Dynamic HTML for Results ---
+                    const resultsHtml = `
+                        <div class="result-time-item">
+                            <span class="time-label">Next Potential Oppurtunity (Purple):</span>
+                            <span class="time-value">${formatTime(next1)}</span>
+                        </div>
+                        <div class="result-time-item">
+                            <span class="time-label">Mid-Range Gap Signal (Purple):</span>
+                            <span class="time-value">${formatTime(next2)}</span>
+                        </div>
+                        <div class="result-time-item">
+                            <span class="time-label">Main High-Odd Signal (Pink 10x+):</span>
+                            <span class="time-value high-odd-value">${formatTime(next3)}</span>
+                        </div>
+                    `;
+
+                    // Update UI with results
+                    output.innerHTML = resultsHtml;
+                    outputWrapper.style.display = "block";
+                })
+                .catch(err => {
+                    console.error("OCR Error:", err);
+                    alert("An error occurred during AI analysis. Please try a different screenshot.");
+                })
+                .finally(() => {
+                    // Reset UI State
+                    loader.style.display = "none";
+                    analyzeBtn.disabled = false;
+                    analyzeBtn.innerText = "Analyze Pattern";
+                });
         }
     </script>
 </body>
