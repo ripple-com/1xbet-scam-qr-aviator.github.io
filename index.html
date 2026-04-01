@@ -2,249 +2,484 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALPHA-SIGNAL | Secure Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Suwahas Sathsara Aviator Signal PRO</title>
     
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
-        body {
-            background-color: #060608;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-            background-image: radial-gradient(circle at 50% -20%, #1a1a24 0%, #060608 70%);
+        /* --- CYBER-TECH STYLES --- */
+        :root {
+            --primary: #00f2ff;
+            --secondary: #0051ff;
+            --bg-dark: #050b14;
+            --card-bg: rgba(10, 20, 35, 0.85);
+            --border: rgba(0, 242, 255, 0.3);
+            --text-main: #ffffff;
+            --text-muted: #8b9bb4;
         }
-        .premium-container {
-            background: rgba(16, 16, 20, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 28px;
-            width: 100%;
-            max-width: 480px;
-            padding: 40px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(15px);
-            text-align: center;
-        }
-        .brand-logo { font-size: 32px; font-weight: 700; margin-bottom: 20px; }
-        .brand-logo span { color: #ff0040; }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        #authSection, #deviceBlockedSection, #mainApp { display: none; }
-
-        .input-group { margin-bottom: 15px; }
-        .input-group input {
-            width: 100%; padding: 15px; background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; outline: none;
+        body { 
+            margin: 0; padding: 0; 
+            font-family: 'Poppins', sans-serif; 
+            background-color: var(--bg-dark);
+            background-image: 
+                linear-gradient(rgba(0, 242, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 242, 255, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            color: var(--text-main); 
+            overflow: hidden; 
         }
-        .btn {
-            background: linear-gradient(135deg, #ff0040, #ff4d79);
-            color: white; border: none; padding: 16px; border-radius: 12px; width: 100%; 
-            font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 10px; transition: 0.3s;
-        }
-        .btn:active { transform: scale(0.98); }
-        .error-msg { color: #ff4d4d; font-size: 13px; margin-top: 15px; }
 
-        /* Device Blocked View */
-        .dev-box {
-            background: rgba(255, 0, 64, 0.05);
-            border: 1px dashed #ff0040;
-            padding: 20px;
-            border-radius: 15px;
-            font-family: 'Space Mono', monospace;
-            color: #ff4d4d;
-            margin: 20px 0;
-            word-break: break-all;
+        .glow-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 81, 255, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            animation: pulseBg 5s infinite ease-in-out;
+        }
+        @keyframes pulseBg { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+        .tech-card { 
+            background: var(--card-bg); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px); 
+            border: 1px solid var(--border); 
+            padding: 30px; 
+            border-radius: 15px; 
+            width: 90%; 
+            max-width: 400px; 
+            text-align: center; 
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(0, 242, 255, 0.05); 
+            max-height: 95vh; 
+            overflow-y: auto; 
+            position: relative; 
+            z-index: 10; 
+            display: none; 
+        }
+        .tech-card::-webkit-scrollbar { width: 0; }
+
+        .profile-wrapper {
             position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 25px rgba(0, 242, 255, 0.5);
+            background: rgba(5, 11, 20, 0.8);
         }
-        .copy-badge {
-            background: #ff0040; color: white; font-size: 10px; padding: 4px 8px;
-            border-radius: 5px; cursor: pointer; margin-top: 10px; display: inline-block;
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            padding: 4px;
         }
 
-        /* App View */
-        .file-label {
-            display: block; border: 2px dashed rgba(255, 0, 64, 0.3);
-            padding: 30px; border-radius: 20px; cursor: pointer; margin-bottom: 15px;
+        .profile-section {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(90deg, rgba(0, 242, 255, 0.05), rgba(0, 0, 0, 0.2));
+            border: 1px solid rgba(0, 242, 255, 0.2);
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: left;
+            box-shadow: inset 0 0 20px rgba(0, 242, 255, 0.02);
         }
-        #outputWrapper { margin-top: 25px; background: rgba(255,255,255,0.03); padding: 20px; border-radius: 15px; }
+
+        .profile-pic-small {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            margin-right: 15px;
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+            object-fit: cover;
+        }
+
+        .profile-details { flex: 1; overflow: hidden; }
+
+        .profile-email {
+            font-size: 13px; font-weight: 600; color: white;
+            margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .profile-status {
+            font-size: 11px; color: var(--primary);
+            text-transform: uppercase; letter-spacing: 1px;
+            background: rgba(0, 242, 255, 0.1);
+            padding: 2px 8px; border-radius: 4px;
+            display: inline-block; font-weight: 700;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        h1 { 
+            font-family: 'Rajdhani', sans-serif; font-weight: 700; margin: 0; font-size: 28px; 
+            background: linear-gradient(to right, #fff, var(--primary)); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            text-transform: uppercase; letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+        }
+        
+        .sub-title { 
+            font-family: 'Rajdhani', sans-serif; font-size: 12px; color: var(--primary); 
+            margin-bottom: 25px; letter-spacing: 3px; text-transform: uppercase;
+        }
+        
+        .input-box { position: relative; margin-bottom: 25px; }
+        .input-box label { 
+            position: absolute; top: -10px; left: 15px; background: #0d1624; padding: 0 8px; 
+            font-size: 11px; color: var(--primary); border: 1px solid var(--border);
+            border-radius: 4px; z-index: 10; font-weight: 600; text-transform: uppercase;
+        }
+        .std-input { 
+            width: 100%; background: rgba(0, 0, 0, 0.4); 
+            border: 1px solid rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 8px; 
+            color: white; font-size: 18px; font-family: 'Rajdhani', sans-serif; 
+            font-weight: 600; outline: none; transition: 0.3s; text-align: center; letter-spacing: 1px;
+        }
+        .std-input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0, 242, 255, 0.2); }
+        
+        .btn-analyze { 
+            width: 100%; padding: 15px; 
+            background: linear-gradient(90deg, var(--secondary), #00c3ff); 
+            border: none; border-radius: 8px; color: white; font-size: 16px; 
+            font-weight: 700; font-family: 'Rajdhani', sans-serif; letter-spacing: 1px;
+            cursor: pointer; box-shadow: 0 5px 20px rgba(0, 81, 255, 0.4); 
+            text-transform: uppercase; margin-top: 10px; transition: all 0.2s; 
+            position: relative; overflow: hidden;
+        }
+        .btn-analyze:active { transform: scale(0.98); }
+
+        .btn-logout { 
+            width: 100%; padding: 12px; background: rgba(255, 0, 0, 0.1); 
+            border: 1px solid #ff4d4d; border-radius: 8px; color: #ff4d4d; 
+            font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 25px; transition: 0.3s;
+        }
+        
+        .error-msg { color: #ff4d4d; font-size: 13px; margin-top: 15px; display: none; font-weight: bold; background: rgba(255,0,0,0.1); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,0,0,0.3); }
+        
+        /* Modal */
+        #noticeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 9999; display: none; justify-content: center; align-items: center; padding: 20px; }
+        .notice-content { background: #0b111a; border: 1px solid var(--primary); padding: 30px 20px; border-radius: 15px; width: 100%; max-width: 380px; text-align: center; box-shadow: 0 0 50px rgba(0, 242, 255, 0.2); animation: slideUp 0.4s ease-out; position: relative; }
+        .notice-title { color: var(--primary); font-weight: 800; font-size: 18px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; font-family: 'Rajdhani', sans-serif; }
+        .notice-text { font-size: 14px; color: #ccc; line-height: 1.7; margin-bottom: 25px; text-align: center; font-weight: 400; }
+        .signature { color: #ffcc00; font-weight: 700; margin-top: 15px; display: block; font-size: 12px; letter-spacing: 0.5px; }
+        .btn-notice { width: 100%; padding: 14px; background: var(--secondary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 14px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); font-family: 'Rajdhani', sans-serif; text-transform: uppercase;}
+
+        .clock-wrapper { display: flex; align-items: stretch; gap: 10px; }
+        .clock-container { flex: 2; display: flex; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.3); border-radius: 8px; padding: 10px; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .clock-input { background: transparent; border: none; color: white; font-size: 38px; font-weight: 600; width: 55px; text-align: center; outline: none; font-family: 'Rajdhani', sans-serif; padding: 0; margin: 0; }
+        .clock-colon { font-size: 30px; margin: 0 2px; color: var(--primary); animation: blink 1s infinite; }
+        .ampm-toggle { flex: 1; display: flex; flex-direction: column; background: rgba(0, 0, 0, 0.3); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); overflow: hidden; }
+        .ampm-btn { flex: 1; border: none; background: transparent; color: #555; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 14px; font-family: 'Rajdhani', sans-serif; }
+        .ampm-btn.active { background: var(--primary); color: #000; box-shadow: 0 0 15px rgba(0, 242, 255, 0.4); }
+        
+        #resultArea { display: none; margin-top: 25px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px; animation: fadeIn 0.5s ease; }
+        .result-panel { background: rgba(0, 242, 255, 0.05); border-radius: 10px; padding: 15px; margin-bottom: 10px; border: 1px solid var(--border); }
+        .time-display { font-size: 36px; font-weight: 800; color: var(--primary); text-shadow: 0 0 20px rgba(0, 242, 255, 0.4); margin: 5px 0; font-family: 'Rajdhani', sans-serif; }
+        .zone-display { font-size: 20px; color: #ffd700; font-weight: 600; font-family: 'Rajdhani', sans-serif; letter-spacing: 1px;}
+        .btn-copy { width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-family: 'Rajdhani', sans-serif; letter-spacing: 1px; transition: 0.3s;}
+        
+        .social-area { margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; gap: 10px; justify-content: center; }
+        .social-btn { flex: 1; display: flex; align-items: center; justify-content: center; padding: 12px; border-radius: 8px; text-decoration: none; color: white; font-size: 13px; font-weight: 600; transition: 0.3s; border: 1px solid transparent; gap: 8px; font-family: 'Poppins', sans-serif; }
+        .yt { background: rgba(255, 0, 0, 0.1); border-color: rgba(255, 0, 0, 0.4); }
+        .wa { background: rgba(0, 255, 136, 0.1); border-color: rgba(0, 255, 136, 0.4); }
+        
+        .footer { margin-top: 25px; font-size: 10px; color: var(--text-muted); letter-spacing: 0.5px; }
+
+        @keyframes blink { 50% { opacity: 0; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div class="premium-container">
-        <div class="brand-logo">ALPHA<span>SIGNAL</span></div>
+    <div class="glow-bg"></div>
 
-        <div id="authSection">
-            <p style="color: #888; margin-bottom: 20px;">Secure Account Login</p>
-            <div class="input-group">
-                <input type="email" id="userEmail" placeholder="Email Address">
+    <div id="noticeModal">
+        <div class="notice-content">
+            <div class="notice-title"><i class="fa-solid fa-shield-halved"></i> SYSTEM NOTICE</div>
+            <div class="notice-text">
+                මෙම Aviator Signal Web App එක ගණිතමය උපකල්පණ ක්‍රමයකට සාදා ඇත.<br><br>
+                ඔබේ සම්පුර්ණ මුදල් භාවිතා කරමින් Bet කිරීමෙන් වළකින්න. අවම අගය රු.20 කින් Bet කරන්න.<br>
+                <span class="signature">Suwahas Sathsara Youtube Channel Owner</span>
             </div>
-            <div class="input-group">
-                <input type="password" id="userPass" placeholder="Password">
-            </div>
-            <button class="btn" onclick="userLogin()">LOGIN SYSTEM</button>
-            <p id="loginError" class="error-msg" style="display:none;"></p>
-        </div>
-
-        <div id="deviceBlockedSection">
-            <h3 style="color: #ff4d4d; letter-spacing: 1px;">DEVICE NOT AUTHORIZED</h3>
-            <p style="font-size: 13px; color: #aaa; margin-top: 10px;">Your device is not registered. Please copy and send this ID to Admin:</p>
-            
-            <div class="dev-box">
-                <span id="displayDevId" style="font-size: 18px; font-weight: bold;"></span><br>
-                <div class="copy-badge" id="copyDevBtn" onclick="copyDeviceId()">CLICK TO COPY ID</div>
-            </div>
-
-            <button class="btn" style="background: #1a1a24; border: 1px solid #333;" onclick="location.reload()">RE-CHECK ACCESS</button>
-            <p onclick="firebase.auth().signOut()" style="margin-top: 20px; font-size: 12px; cursor: pointer; color: #555; text-decoration: underline;">Logout & Switch Account</p>
-        </div>
-
-        <div id="mainApp">
-            <div id="status" style="color: #00ff88; font-size: 11px; margin-bottom: 20px; letter-spacing: 1px;">● SYSTEM ACTIVE & ENCRYPTED</div>
-            <input type="file" id="imageInput" style="display:none;" accept="image/*">
-            <label for="imageInput" class="file-label">
-                <span id="labelText" style="color: #888;">Drop History Screenshot Here</span>
-            </label>
-            <button class="btn" id="analyzeBtn" onclick="processImage()">GENERATE AI SIGNALS</button>
-
-            <div id="outputWrapper" style="display:none;">
-                <div id="outputContent"></div>
-                <button class="btn" style="background: rgba(255,255,255,0.1); border: 1px solid #333;" onclick="copySignals()">COPY RESULTS</button>
-            </div>
-            <p onclick="firebase.auth().signOut()" style="margin-top: 30px; font-size: 12px; cursor: pointer; color: #444;">Logout</p>
+            <button class="btn-notice" onclick="acceptNotice()">I UNDERSTAND & ACCESS</button>
         </div>
     </div>
 
+    <div id="loginScreen" class="tech-card">
+        <div class="profile-wrapper">
+            <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Profile" class="profile-img">
+        </div>
+        <h1>LOGIN</h1>
+        <div class="sub-title">SECURE TERMINAL ACCESS</div>
+        <div class="input-box">
+            <label>EMAIL ADDRESS</label>
+            <input type="email" id="email" class="std-input" placeholder="user@email.com">
+        </div>
+        <div class="input-box">
+            <label>PASSWORD</label>
+            <input type="password" id="password" class="std-input" placeholder="••••••••">
+        </div>
+        <button class="btn-analyze" id="loginBtn">INITIALIZE SESSION <i class="fa-solid fa-arrow-right"></i></button>
+        <div id="loginError" class="error-msg"></div>
+        <div class="footer">SYSTEM ID: 2.0.4 | POWERED BY SUWAHAS SATHSARA</div>
+    </div>
+
+    <div id="deviceLockScreen" class="tech-card">
+        <div class="profile-wrapper">
+            <i class="fa-solid fa-mobile-screen-button" style="font-size: 40px; color: var(--primary);"></i>
+        </div>
+        <h1>DEVICE LOCK</h1>
+        <div class="sub-title">AUTHORIZATION REQUIRED</div>
+        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; border: 1px dashed var(--primary); margin-bottom: 20px;">
+            <div style="font-size: 10px; color: #8b9bb4; margin-bottom: 5px;">YOUR DEVICE ID</div>
+            <div id="showDeviceId" style="font-size: 16px; color: #fff; font-weight: bold; font-family: 'Rajdhani', sans-serif; letter-spacing: 1px; word-break: break-all;">LOADING...</div>
+            <button onclick="copyDeviceId()" style="background: transparent; border: none; color: var(--primary); cursor: pointer; font-size: 12px; margin-top: 8px; padding: 5px 10px; border: 1px solid var(--primary); border-radius: 4px;">
+                <i class="fa-regular fa-copy"></i> TAP TO COPY
+            </button>
+        </div>
+        <p style="font-size: 12px; color: #ccc; margin-bottom: 20px; line-height: 1.5;">
+            You don't have permission to access this App. Please send this ID to Admin to approve your device.
+        </p>
+        <div class="social-area">
+            <a id="waLink" href="#" target="_blank" class="social-btn wa">
+                <i class="fab fa-whatsapp"></i> Send to Admin
+            </a>
+            <a href="https://t.me/suwahassathsara" target="_blank" class="social-btn" style="background: rgba(0, 136, 204, 0.1); border: 1px solid rgba(0, 136, 204, 0.4);">
+                <i class="fab fa-telegram"></i> Telegram
+            </a>
+        </div>
+        <button class="btn-logout" onclick="auth.signOut(); location.reload();">SIGN OUT</button>
+        <div class="footer">SECURITY ID CHECKER V1.0</div>
+    </div>
+
+    <div id="mainApp" class="tech-card">
+        <h1>SUWAHAS SATHSARA</h1>
+        <div class="sub-title">SIGNAL PREDICTION PRO</div>
+        
+        <div class="profile-section">
+            <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profile-pic-small" alt="User">
+            <div class="profile-details">
+                <div id="appUserEmail" class="profile-email">Loading User...</div>
+                <div id="appUserExpiry" class="profile-status"><i class="fa-solid fa-spinner fa-spin"></i> CHECKING</div>
+            </div>
+        </div>
+
+        <div class="input-box">
+            <label>LAST BIG ODD (x)</label>
+            <input type="number" id="lastOdd" class="std-input" placeholder="43.06" step="0.01">
+        </div>
+
+        <div class="input-box">
+            <label>SYSTEM TIME INPUT</label>
+            <div class="clock-wrapper">
+                <div class="clock-container">
+                    <input type="number" id="inputHour" class="clock-input" placeholder="00" oninput="checkInput(this, 'inputMinute')">
+                    <span class="clock-colon">:</span>
+                    <input type="number" id="inputMinute" class="clock-input" placeholder="00" oninput="checkInput(this, null)">
+                </div>
+                <div class="ampm-toggle">
+                    <button class="ampm-btn active" id="btnAM" onclick="setAMPM('AM')">AM</button>
+                    <button class="ampm-btn" id="btnPM" onclick="setAMPM('PM')">PM</button>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-analyze" onclick="calculateSignal()">CALCULATE SIGNAL <i class="fa-solid fa-bolt"></i></button>
+
+        <div id="resultArea">
+            <div class="result-panel">
+                <div style="font-size: 10px; color: #8b9bb4; letter-spacing: 2px; text-transform: uppercase;">Predicted Signal Time</div>
+                <div class="time-display" id="displaySignal">00:00 AM</div>
+            </div>
+            <div class="result-panel" style="border-color: #ffd700; background: rgba(255, 215, 0, 0.05);">
+                <div style="font-size: 10px; color: #ffd700; letter-spacing: 2px; text-transform: uppercase;">Active Zone (4 MIN)</div>
+                <div class="zone-display">
+                    <span id="zoneStart">00:00</span> - <span id="zoneEnd">00:00</span>
+                </div>
+            </div>
+            <button class="btn-copy" onclick="manualCopy()" id="copyButton">
+                <i class="fa-regular fa-copy"></i> COPY SIGNAL DATA
+            </button>
+        </div>
+
+        <div class="social-area">
+            <a href="https://www.youtube.com/@suwahas-sathsara-chandrasiri" target="_blank" class="social-btn yt">
+                <i class="fab fa-youtube"></i> Channel
+            </a>
+            <a href="https://chat.whatsapp.com/FSpAUoHvFSYLWKmfwwLBqC" target="_blank" class="social-btn wa">
+                <i class="fab fa-whatsapp"></i> Group
+            </a>
+        </div>
+
+        <button class="btn-logout" id="logoutBtn" style="border-color: #ff4d4d; color: #ff4d4d;">TERMINATE SESSION <i class="fa-solid fa-power-off"></i></button>
+        <div class="footer">VERSION 2.5 | SUWAHAS SATHSARA</div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
     <script>
-        // --- FIREBASE CONFIG ---
         const firebaseConfig = {
           apiKey: "AIzaSyBmLvGb0vXkJhKVKew1sYZpHuVPo-mHvjk",
           authDomain: "aviatorsignal-ff90c.firebaseapp.com",
           projectId: "aviatorsignal-ff90c",
           storageBucket: "aviatorsignal-ff90c.firebasestorage.app",
           messagingSenderId: "656549146292",
-          appId: "1:656549146292:web:f35944e4ae7b6db943f1e1"
+          appId: "1:656549146292:web:f35944e4ae7b6db943f1e1",
+          measurementId: "G-B5N5DG523J"
         };
-
+        const adminWhatsapp = "94725019800"; 
+        
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Device ID Generation
-        const myDeviceId = (() => {
-            let id = localStorage.getItem('alpha_dev_id');
-            if (!id) {
-                id = 'ALPHA-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-                localStorage.setItem('alpha_dev_id', id);
+        function getDeviceId() {
+            let deviceId = localStorage.getItem("aviator_device_id");
+            if (!deviceId) {
+                deviceId = 'DEV-' + Math.random().toString(36).substr(2, 6).toUpperCase() + '-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+                localStorage.setItem("aviator_device_id", deviceId);
             }
-            return id;
-        })();
-
-        // Auth Listener
-        auth.onAuthStateChanged(user => {
-            hideAll();
-            if (user) {
-                verifyAccess(user);
-            } else {
-                document.getElementById('authSection').style.display = 'block';
-            }
-        });
-
-        function userLogin() {
-            const email = document.getElementById('userEmail').value;
-            const pass = document.getElementById('userPass').value;
-            const btn = event.target;
-            btn.innerText = "VERIFYING...";
-            
-            auth.signInWithEmailAndPassword(email, pass).catch(err => {
-                const errDiv = document.getElementById('loginError');
-                errDiv.innerText = "Login Failed: Check Email/Password";
-                errDiv.style.display = 'block';
-                btn.innerText = "LOGIN SYSTEM";
-            });
-        }
-
-        async function verifyAccess(user) {
-            const doc = await db.collection("users").doc(user.uid).get();
-            if (doc.exists) {
-                const data = doc.data();
-                const now = new Date();
-                const expiry = new Date(data.expiryDate);
-                const allowedDevices = data.allowed_devices || [];
-
-                if (expiry < now) {
-                    alert("Your access has expired. Please renew.");
-                    auth.signOut();
-                    return;
-                }
-
-                if (allowedDevices.includes(myDeviceId)) {
-                    document.getElementById('mainApp').style.display = 'block';
-                } else {
-                    document.getElementById('displayDevId').innerText = myDeviceId;
-                    document.getElementById('deviceBlockedSection').style.display = 'block';
-                }
-            } else {
-                auth.signOut();
-            }
+            return deviceId;
         }
 
         function copyDeviceId() {
-            navigator.clipboard.writeText(myDeviceId).then(() => {
-                const copyBtn = document.getElementById('copyDevBtn');
-                copyBtn.innerText = "COPIED! ✅";
-                copyBtn.style.background = "#00ff88";
-                setTimeout(() => {
-                    copyBtn.innerText = "CLICK TO COPY ID";
-                    copyBtn.style.background = "#ff0040";
-                }, 2000);
+            const id = document.getElementById("showDeviceId").innerText;
+            navigator.clipboard.writeText(id).then(() => { alert("Device ID Copied!"); });
+        }
+
+        let expiryTimer = null;
+        function startSessionTimer(expiryDateStr) {
+            if(expiryTimer) clearInterval(expiryTimer);
+            const expiryDiv = document.getElementById("appUserExpiry");
+            const expiryTime = new Date(expiryDateStr).getTime();
+            expiryTimer = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = expiryTime - now;
+                if (distance < 0) {
+                    clearInterval(expiryTimer);
+                    auth.signOut();
+                    window.location.reload();
+                    return;
+                }
+                const d = Math.floor(distance / (86400000));
+                const h = Math.floor((distance % 86400000) / 3600000);
+                const m = Math.floor((distance % 3600000) / 60000);
+                const s = Math.floor((distance % 60000) / 1000);
+                expiryDiv.innerHTML = `<i class="fa-solid fa-stopwatch"></i> ${d}d ${h}h ${m}m ${s}s`;
+            }, 1000);
+        }
+
+        function checkUserAccess(user) {
+            const myDeviceId = getDeviceId();
+            db.collection("users").doc(user.uid).get().then((doc) => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById("appUserEmail").innerText = user.email;
+                    if (data.allowed_devices && data.allowed_devices.includes(myDeviceId)) {
+                        if (data.expiryDate) {
+                            if (new Date() > new Date(data.expiryDate)) {
+                                auth.signOut(); alert("Subscription Expired!"); return;
+                            }
+                            startSessionTimer(data.expiryDate);
+                        } else {
+                            document.getElementById("appUserExpiry").innerHTML = 'LIFETIME ACCESS';
+                        }
+                        document.getElementById("loginScreen").style.display = "none";
+                        document.getElementById("deviceLockScreen").style.display = "none";
+                        document.getElementById("noticeModal").style.display = "flex";
+                    } else {
+                        showDeviceLock(myDeviceId, user.email);
+                    }
+                }
             });
         }
 
-        function hideAll() {
-            document.getElementById('authSection').style.display = 'none';
-            document.getElementById('deviceBlockedSection').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'none';
+        function showDeviceLock(currentId, userEmail) {
+            document.getElementById("loginScreen").style.display = "none";
+            document.getElementById("mainApp").style.display = "none";
+            document.getElementById("deviceLockScreen").style.display = "block";
+            document.getElementById("showDeviceId").innerText = currentId;
+            let msg = `Hello Admin, Approve Device:\nEmail: ${userEmail}\nID: ${currentId}`;
+            document.getElementById("waLink").href = `https://wa.me/${adminWhatsapp}?text=${encodeURIComponent(msg)}`;
         }
 
-        // Previous Signal Logic
-        function processImage() {
-            const file = document.getElementById('imageInput').files[0];
-            if(!file) return alert("Please upload history screenshot first!");
-            const btn = document.getElementById('analyzeBtn');
-            btn.innerText = "ANALYZING...";
-            btn.disabled = true;
+        function acceptNotice() {
+            document.getElementById("noticeModal").style.display = "none";
+            document.getElementById("mainApp").style.display = "block";
+        }
 
-            Tesseract.recognize(file, 'eng').then(() => {
-                const now = new Date();
-                const fmt = (m) => new Date(now.getTime() + m * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                
-                document.getElementById('outputContent').innerHTML = `
-                    <div style="margin-bottom:10px;">
-                        <span style="color:#888; font-size:12px;">PROBABILITY TIME</span><br>
-                        <span style="font-size:22px; font-weight:bold;">${fmt(4)} - ${fmt(7)}</span>
-                    </div>
-                    <div style="color:#a333ff; font-weight:bold;">EXPECTED: PURPLE (2.00x+)</div>
-                `;
-                document.getElementById('outputWrapper').style.display = 'block';
-                btn.innerText = "GENERATE AI SIGNALS";
-                btn.disabled = false;
+        document.getElementById("loginBtn").addEventListener("click", () => {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const btn = document.getElementById("loginBtn");
+            if(!email || !password) return;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+            auth.signInWithEmailAndPassword(email, password).catch(err => {
+                document.getElementById("loginError").style.display = "block";
+                document.getElementById("loginError").innerText = err.message;
+                btn.innerHTML = 'INITIALIZE SESSION';
             });
+        });
+
+        document.getElementById("logoutBtn").addEventListener("click", () => { auth.signOut(); window.location.reload(); });
+
+        auth.onAuthStateChanged((user) => {
+            if (user) checkUserAccess(user);
+            else document.getElementById("loginScreen").style.display = "block";
+        });
+
+        // Signal Logic
+        let currentAmpm = 'AM';
+        function setAMPM(val) { currentAmpm = val; document.getElementById('btnAM').className = val === 'AM' ? 'ampm-btn active' : 'ampm-btn'; document.getElementById('btnPM').className = val === 'PM' ? 'ampm-btn active' : 'ampm-btn'; }
+        function checkInput(el, nextId) { if (el.value.length >= 2) { if(nextId) document.getElementById(nextId).focus(); else el.blur(); } }
+        
+        function calculateSignal() {
+            var odd = parseFloat(document.getElementById("lastOdd").value);
+            var hours = parseInt(document.getElementById("inputHour").value);
+            var minutes = parseInt(document.getElementById("inputMinute").value);
+            if (isNaN(odd) || isNaN(hours) || isNaN(minutes)) return;
+
+            if (currentAmpm === 'PM' && hours < 12) hours += 12;
+            if (currentAmpm === 'AM' && hours === 12) hours = 0;
+
+            var date = new Date(); date.setHours(hours); date.setMinutes(minutes);
+            var signalDate = new Date(date.getTime() + (Math.floor(odd / 2) * 60000));
+            
+            const fmt = (d) => {
+                let h = d.getHours(); let m = d.getMinutes().toString().padStart(2,'0');
+                let ap = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12;
+                return `${h}:${m} ${ap}`;
+            };
+
+            document.getElementById("displaySignal").innerText = fmt(signalDate);
+            document.getElementById("zoneStart").innerText = fmt(new Date(signalDate.getTime() - 120000));
+            document.getElementById("zoneEnd").innerText = fmt(new Date(signalDate.getTime() + 120000));
+            document.getElementById("resultArea").style.display = "block";
         }
 
-        function copySignals() {
-            const text = document.getElementById('outputContent').innerText;
-            navigator.clipboard.writeText(text);
-            alert("Signals Copied!");
+        function manualCopy() {
+            var text = `🎯 Signal: ${document.getElementById("displaySignal").innerText}\n🕒 Zone: ${document.getElementById("zoneStart").innerText} - ${document.getElementById("zoneEnd").innerText}`;
+            navigator.clipboard.writeText(text); alert("Copied!");
         }
     </script>
 </body>
