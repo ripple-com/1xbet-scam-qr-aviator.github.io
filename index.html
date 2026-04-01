@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ALPHA-SIGNAL | Pro AI Analyser</title>
     
-    <script src="https://openfpcdn.io/fingerprintjs/v4"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     
@@ -71,7 +70,7 @@
     <div class="premium-container">
         <div class="header">
             <div class="brand-logo">ALPHA<span>SIGNAL</span></div>
-            <div class="sub-header" id="dynamicSub">Secure Multi-Browser Access</div>
+            <div class="sub-header" id="dynamicSub">Secure System Access</div>
         </div>
 
         <div id="loginSection">
@@ -88,12 +87,12 @@
 
         <div id="deviceVerifySection" style="text-align: center;">
             <div class="device-box">
-                <p style="font-size: 11px; color: #888;">YOUR UNIVERSAL HARDWARE ID:</p>
+                <p style="font-size: 11px; color: #888;">YOUR UNIQUE HARDWARE ID:</p>
                 <span id="displayDevID" class="device-id-text">GENERATING...</span>
                 <button onclick="copyDeviceID()" style="background: rgba(255,255,255,0.05); border: 1px solid #444; color: #aaa; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 10px;">COPY ID</button>
             </div>
             <span class="status-loader">⌛ Waiting for Admin Activation...</span>
-            <p style="font-size: 11px; color: #555;">Once approved, you will be redirected automatically.</p>
+            <p style="font-size: 11px; color: #555;">Dashboard will open automatically after activation.</p>
         </div>
 
         <div id="mainAppSection">
@@ -133,18 +132,29 @@
         let MY_DEVICE_ID = "";
         let authUnsub = null;
 
-        // 1. පිටුව Load වූ සැනින් Universal ID එක සාදාගැනීම
-        async function initApp() {
-            try {
-                const fp = await FingerprintJS.load();
-                const result = await fp.get();
-                MY_DEVICE_ID = "ALPHA-" + result.visitorId.toUpperCase();
-                document.getElementById('displayDevID').innerText = MY_DEVICE_ID;
-            } catch (e) {
-                document.getElementById('displayDevID').innerText = "ERROR GENERATING ID";
+        // --- NEW STABLE DEVICE ID GENERATOR ---
+        // FingerprintJS අවශ්‍ය නැත, මෙය වඩාත් ස්ථාවරයි.
+        function generateStableID() {
+            const navigator_info = window.navigator.userAgent;
+            const screen_info = window.screen.width + "x" + window.screen.height;
+            const hardware_concurrency = window.navigator.hardwareConcurrency || "0";
+            
+            // සරල Hash එකක් සාදයි
+            const str = navigator_info + screen_info + hardware_concurrency;
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                let char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
             }
+            return "ALPHA-" + Math.abs(hash).toString(16).toUpperCase();
         }
-        initApp();
+
+        // පිටුව Load වූ විගස ID එක සාදයි
+        window.onload = function() {
+            MY_DEVICE_ID = generateStableID();
+            document.getElementById('displayDevID').innerText = MY_DEVICE_ID;
+        };
 
         async function handleLogin() {
             const email = document.getElementById('userEmail').value.trim();
@@ -157,7 +167,6 @@
                 document.getElementById('loginSection').style.display = 'none';
                 document.getElementById('deviceVerifySection').style.display = 'block';
 
-                // Real-time Listener - Admin ඇක්ටිව් කරන තෙක් බලා සිටී
                 authUnsub = db.collection("users").doc(uid).onSnapshot((doc) => {
                     if (doc.exists) {
                         const data = doc.data();
@@ -169,20 +178,21 @@
                         }
                     }
                 });
-            } catch (err) { alert("Login Failed: " + err.message); }
+            } catch (err) { alert("Login Error: " + err.message); }
         }
 
         function enterDashboard() {
             if(authUnsub) authUnsub(); 
             document.getElementById('deviceVerifySection').style.display = 'none';
             document.getElementById('mainAppSection').style.display = 'block';
-            document.getElementById('dynamicSub').innerText = "AI Predictor Dashboard";
+            document.getElementById('dynamicSub').innerText = "AI Dashboard Active";
         }
 
         function copyDeviceID() {
-            navigator.clipboard.writeText(MY_DEVICE_ID).then(() => alert("Copied!"));
+            navigator.clipboard.writeText(MY_DEVICE_ID).then(() => alert("ID Copied!"));
         }
 
+        // Signal Processing
         let signalTextToCopy = "";
         function processImage() {
             const file = document.getElementById('imageInput').files[0];
@@ -191,18 +201,15 @@
             Tesseract.recognize(file, 'eng').then(() => {
                 const now = new Date();
                 const fmt = (m) => new Date(now.getTime() + m * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toLowerCase();
-                const r1 = `${fmt(5)} – ${fmt(7)}`;
-                const r2 = `${fmt(15)} – ${fmt(18)}`;
                 document.getElementById('outputContent').innerHTML = `
-                    <div class="signal-row"><span class="time-range">${r1}</span><span class="purple-text">Purple Opportunity</span></div>
-                    <div class="signal-row"><span class="time-range">${r2}</span><span class="pink-text">High-Odd Signal</span></div>
+                    <div class="signal-row"><span class="time-range">${fmt(5)} – ${fmt(7)}</span><span class="purple-text">Purple</span></div>
+                    <div class="signal-row"><span class="time-range">${fmt(15)} – ${fmt(18)}</span><span class="pink-text">High-Odd</span></div>
                 `;
-                signalTextToCopy = `ALPHA SIGNALS:\n1. ${r1}\n2. ${r2}`;
+                signalTextToCopy = `ALPHA SIGNALS:\n1. ${fmt(5)}\n2. ${fmt(15)}`;
                 document.getElementById('outputWrapper').style.display = "block";
                 document.getElementById('analyzeBtn').innerText = "Generate Signals";
             });
         }
-
         function copyToClipboard() {
             navigator.clipboard.writeText(signalTextToCopy).then(() => alert("Signals Copied!"));
         }
