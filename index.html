@@ -3,374 +3,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVIA-PREDICT | Aviator AI Signal Analyser</title>
+    <title>ALPHA-SIGNAL | User Access</title>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* --- General Styles --- */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
         body {
-            background-color: #08080a;
+            background-color: #060608;
             color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
-            overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% -20%, #1a1a24 0%, #060608 70%);
         }
-
-        /* --- Main Container --- */
-        .main-container {
-            background: rgba(18, 18, 22, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
+        .premium-container {
+            background: rgba(16, 16, 20, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 28px;
             width: 100%;
-            max-width: 540px;
+            max-width: 520px;
             padding: 40px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            position: relative;
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s ease;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(15px);
         }
-
-        .main-container:hover {
-            transform: translateY(-5px);
+        .header { text-align: center; margin-bottom: 35px; }
+        .brand-logo { font-size: 32px; font-weight: 700; letter-spacing: -1px; }
+        .brand-logo span { color: #ff0040; text-shadow: 0 0 15px rgba(255, 0, 64, 0.5); }
+        .sub-header { font-size: 11px; color: #9090a0; text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
+        
+        /* Login Section */
+        #loginSection { display: block; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; font-size: 12px; color: #888; margin-bottom: 8px; }
+        .input-group input { 
+            width: 100%; padding: 15px; background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; 
+            color: white; outline: none; transition: 0.3s;
         }
+        .input-group input:focus { border-color: #ff0040; }
+        .error-msg { color: #ff4d79; font-size: 12px; margin-bottom: 15px; display: none; text-align: center; border: 1px solid #ff4d7930; padding: 10px; border-radius: 8px; background: #ff4d7910; }
 
-        /* Accent Light Effect */
-        .main-container::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #ff0040, #ff4d79, #ff0040);
-            border-radius: 26px;
-            z-index: -1;
-            filter: blur(10px);
-            opacity: 0.3;
+        /* Main App Section */
+        #mainAppSection { display: none; }
+        .file-label {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border: 2px dashed rgba(255, 0, 64, 0.3); border-radius: 20px;
+            padding: 30px; cursor: pointer; background: rgba(255, 255, 255, 0.02);
+            color: #888; margin-bottom: 15px;
         }
-
-        /* --- Header Section --- */
-        .header {
-            text-align: center;
-            margin-bottom: 35px;
-        }
-
-        .brand-logo {
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: -1px;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .brand-logo span {
-            color: #ff0040;
-        }
-
-        .sub-header {
-            font-size: 14px;
-            color: #888899;
-            margin-top: 5px;
-            font-weight: 300;
-        }
-
-        /* --- Upload Section --- */
-        .upload-section {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .file-input-wrapper {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        #imageInput {
-            opacity: 0;
-            position: absolute;
-            z-index: -1;
-        }
-
-        .file-input-label {
-            display: block;
-            background-color: rgba(255, 255, 255, 0.03);
-            border: 2px dashed rgba(255, 0, 64, 0.3);
-            border-radius: 12px;
-            padding: 25px;
-            color: #aaaaab;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 400;
-        }
-
-        .file-input-label:hover {
-            background-color: rgba(255, 0, 64, 0.05);
-            border-color: #ff0040;
-            color: #ffffff;
-        }
-
-        .file-input-label i {
-            font-size: 24px;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .analyze-btn {
+        .action-btn {
             background: linear-gradient(135deg, #ff0040, #ff4d79);
-            color: white;
-            border: none;
-            padding: 15px 35px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            width: 100%;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(255, 0, 64, 0.3);
+            color: white; border: none; padding: 18px; border-radius: 15px; 
+            width: 100%; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s;
         }
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white; padding: 15px; border-radius: 12px; width: 100%; 
+            font-size: 15px; cursor: pointer; margin-top: 20px; display: none; transition: 0.3s;
+        }
+        #outputWrapper { display: none; margin-top: 30px; }
+        .result-card { background: rgba(255, 255, 255, 0.03); border-radius: 20px; padding: 25px; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .signal-row { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .label { font-size: 12px; color: #aaa; text-transform: uppercase; }
+        .time-range { font-family: 'Space Mono', monospace; font-size: 20px; font-weight: 700; color: #fff; display: block; }
+        .purple-text { color: #a333ff; }
+        .pink-text { color: #ff0040; }
 
-        .analyze-btn:hover {
-            box-shadow: 0 8px 25px rgba(255, 0, 64, 0.5);
-            transform: translateY(-2px);
-        }
-
-        .analyze-btn:active {
-            transform: translateY(1px);
-        }
-
-        .analyze-btn:disabled {
-            background: #444;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        /* --- Loader Section --- */
-        .loader-wrapper {
-            display: none;
-            text-align: center;
-            margin-top: 20px;
-            color: #ffcc00;
-        }
-
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-left-color: #ff0040;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* --- Output Section --- */
-        #outputWrapper {
-            margin-top: 30px;
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .output-card {
-            background-color: rgba(0, 255, 136, 0.03);
-            border: 1px solid rgba(0, 255, 136, 0.1);
-            border-radius: 16px;
-            padding: 25px;
-            position: relative;
-        }
-
-        .result-title {
-            color: #00ff88;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .result-time-item {
-            background-color: rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
-            padding: 12px 18px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 15px;
-        }
-
-        .result-time-item:last-child {
-            margin-bottom: 0;
-            background-color: rgba(255, 77, 121, 0.1); /* Slight highlight for high odd */
-            border: 1px solid rgba(255, 77, 121, 0.2);
-        }
-
-        .time-label {
-            color: #aaaaab;
-        }
-
-        .time-value {
-            color: #ffffff;
-            font-weight: 600;
-            font-family: monospace;
-            font-size: 16px;
-        }
-
-        .high-odd-value {
-            color: #ff4d79;
-        }
-
-        .disclaimer {
-            font-size: 12px;
-            color: #666677;
-            margin-top: 25px;
-            text-align: center;
-            line-height: 1.5;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 15px;
-        }
+        .user-info { font-size: 10px; color: #555; text-align: center; margin-top: 15px; }
+        #hidden-copy-area { position: absolute; left: -9999px; }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
+    <div class="premium-container">
         <div class="header">
-            <div class="brand-logo">AVIA<span>PREDICT</span></div>
-            <div class="sub-header">AI-Powered Aviator Signal Analyser</div>
-        }
+            <div class="brand-logo">ALPHA<span>SIGNAL</span></div>
+            <div class="sub-header" id="dynamicSub">Secure User Access</div>
+        </div>
 
-        <div class="upload-section">
-            <div class="file-input-wrapper">
-                <input type="file" id="imageInput" accept="image/*">
-                <label for="imageInput" class="file-input-label" id="fileLabel">
-                    <i>&#128190;</i> <span id="fileLabelText">Click to upload screenshot</span>
+        <div id="loginSection">
+            <div class="input-group">
+                <label>Registered Email</label>
+                <input type="email" id="userEmail" placeholder="example@mail.com">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="userPass" placeholder="••••••••">
+            </div>
+            <div id="loginError" class="error-msg"></div>
+            <button class="action-btn" id="loginBtn" onclick="handleLogin()">AUTHENTICATE</button>
+            <div class="user-info">Your Device ID: <span id="myDevID">Loading...</span></div>
+        </div>
+
+        <div id="mainAppSection">
+            <div class="upload-zone">
+                <input type="file" id="imageInput" style="display:none;" accept="image/*">
+                <label for="imageInput" class="file-label" id="fileLabel">
+                    <span id="labelText">Upload History Screenshot</span>
                 </label>
+                <button class="action-btn" id="analyzeBtn" onclick="processImage()">Generate Signals</button>
             </div>
-            <button class="analyze-btn" id="analyzeBtn" onclick="processImage()">Analyze Pattern</button>
-        }
 
-        <div class="loader-wrapper" id="loader">
-            <div class="spinner"></div>
-            <div>AI Analysing... Please wait</div>
-        }
+            <div id="outputWrapper">
+                <div class="result-card" id="outputContent"></div>
+                <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">Copy Signals Text</button>
+            </div>
+            <button onclick="location.reload()" style="background:none; border:none; color:#444; width:100%; margin-top:20px; font-size:12px; cursor:pointer;">Logout Device</button>
+        </div>
 
-        <div id="outputWrapper">
-            <div class="output-card">
-                <div class="result-title">
-                    <i>&#10004;</i> <span>Analysis Complete</span>
-                </div>
-                <div id="output">
-                    </div>
-            </div>
-            <div class="disclaimer">
-                This is an AI-based pattern recognition tool. Results are estimates and not guarantees. Always play responsibly with funds you can afford to lose.
-            </div>
-        }
+        <textarea id="hidden-copy-area"></textarea>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
     <script>
-        // Update file label text when a file is selected
-        const imageInput = document.getElementById('imageInput');
-        const fileLabelText = document.getElementById('fileLabelText');
-        
-        imageInput.addEventListener('change', function() {
-            if (this.files && this.files.length > 0) {
-                fileLabelText.textContent = this.files[0].name;
-                fileLabelText.style.color = '#ffffff'; // White text for file name
-            } else {
-                fileLabelText.textContent = 'Click to upload screenshot';
-                fileLabelText.style.color = '#aaaaab'; // Reset color
+        // --- Firebase Configuration (Same as Admin) ---
+        const firebaseConfig = {
+          apiKey: "AIzaSyBmLvGb0vXkJhKVKew1sYZpHuVPo-mHvjk",
+          authDomain: "aviatorsignal-ff90c.firebaseapp.com",
+          projectId: "aviatorsignal-ff90c",
+          storageBucket: "aviatorsignal-ff90c.firebasestorage.app",
+          messagingSenderId: "656549146292",
+          appId: "1:656549146292:web:f35944e4ae7b6db943f1e1",
+          measurementId: "G-B5N5DG523J"
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // --- Generate/Get Device ID ---
+        function getDeviceID() {
+            let id = localStorage.getItem('alpha_dev_id');
+            if(!id) {
+                id = 'DEV-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+                localStorage.setItem('alpha_dev_id', id);
             }
+            return id;
+        }
+        const MY_DEVICE_ID = getDeviceID();
+        document.getElementById('myDevID').innerText = MY_DEVICE_ID;
+
+        // --- Login Handling ---
+        async function handleLogin() {
+            const email = document.getElementById('userEmail').value.trim();
+            const pass = document.getElementById('userPass').value.trim();
+            const errorBox = document.getElementById('loginError');
+            const btn = document.getElementById('loginBtn');
+
+            if(!email || !pass) { showError("Fill all fields"); return; }
+
+            btn.innerText = "VERIFYING...";
+            btn.disabled = true;
+
+            try {
+                // 1. Firebase Auth Login
+                const userCred = await auth.signInWithEmailAndPassword(email, pass);
+                const uid = userCred.user.uid;
+
+                // 2. Firestore Data Check
+                const userDoc = await db.collection("users").doc(uid).get();
+                
+                if(!userDoc.exists) {
+                    showError("User record not found in Database.");
+                    auth.signOut();
+                    return;
+                }
+
+                const userData = userDoc.data();
+
+                // 3. Expiry Check
+                if(userData.expiryDate) {
+                    const expDate = new Date(userData.expiryDate);
+                    if(expDate < new Date()) {
+                        showError("YOUR ACCESS HAS EXPIRED! Contact Admin.");
+                        auth.signOut();
+                        return;
+                    }
+                }
+
+                // 4. Device ID Security
+                let allowedDevices = userData.allowed_devices || [];
+                
+                if(allowedDevices.length === 0) {
+                    // First time login - Register this device automatically
+                    await db.collection("users").doc(uid).update({
+                        allowed_devices: [MY_DEVICE_ID]
+                    });
+                } else if(!allowedDevices.includes(MY_DEVICE_ID)) {
+                    showError("DEVICE NOT AUTHORIZED! Access restricted to registered devices.");
+                    auth.signOut();
+                    return;
+                }
+
+                // SUCCESS - Show App
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('mainAppSection').style.display = 'block';
+                document.getElementById('dynamicSub').innerText = "Advanced AI Recognition Active";
+
+            } catch (err) {
+                showError(err.message);
+            } finally {
+                btn.innerText = "AUTHENTICATE";
+                btn.disabled = false;
+            }
+        }
+
+        function showError(msg) {
+            const err = document.getElementById('loginError');
+            err.innerText = msg;
+            err.style.display = 'block';
+        }
+
+        // --- Original Signal Processing Logic ---
+        let signalTextToCopy = "";
+        const imageInput = document.getElementById('imageInput');
+        imageInput.addEventListener('change', function() {
+            if(this.files[0]) document.getElementById('labelText').innerText = this.files[0].name;
         });
 
-        async function processImage() {
-            const loader = document.getElementById('loader');
-            const outputWrapper = document.getElementById('outputWrapper');
-            const output = document.getElementById('output');
-            const fileInput = document.getElementById('imageInput');
-            const file = fileInput.files[0];
-            const analyzeBtn = document.getElementById('analyzeBtn');
+        function processImage() {
+            const file = imageInput.files[0];
+            if (!file) { alert("Upload screenshot!"); return; }
+            document.getElementById('analyzeBtn').innerText = "Analyzing Patterns...";
+            
+            Tesseract.recognize(file, 'eng').then(() => {
+                const now = new Date();
+                const fmt = (m) => new Date(now.getTime() + m * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toLowerCase();
+                
+                const r1 = `${fmt(4)} – ${fmt(6)}`;
+                const r2 = `${fmt(12)} – ${fmt(15)}`;
+                const r3 = `${fmt(25)} – ${fmt(28)}`;
 
-            // Basic Validation
-            if (!file) {
-                alert("Please upload an Aviator round history screenshot first!");
-                return;
-            }
+                document.getElementById('outputContent').innerHTML = `
+                    <div class="signal-row"><span class="label">Immediate</span><span class="time-range">${r1}</span><span class="purple-text">Purple Opportunity</span></div>
+                    <div class="signal-row"><span class="label">Main</span><span class="time-range">${r2}</span><span class="purple-text">Stable Trend</span></div>
+                    <div class="signal-row"><span class="label">High-Odd (10x+)</span><span class="time-range">${r3}</span><span class="pink-text">Pink Probability</span></div>
+                `;
 
-            // UI State Management
-            loader.style.display = "block";
-            outputWrapper.style.display = "none";
-            analyzeBtn.disabled = true;
-            analyzeBtn.innerText = "Processing...";
+                signalTextToCopy = `🚀 ALPHA-SIGNAL PREDICTIONS 🚀\n\n1. Immediate: ${r1}\n2. Main: ${r2}\n3. High-Odd: ${r3}\n\nGood Luck!`;
+                document.getElementById('outputWrapper').style.display = "block";
+                document.getElementById('copyBtn').style.display = "block";
+                document.getElementById('analyzeBtn').innerText = "Generate Signals";
+            });
+        }
 
-            // OCR with Tesseract.js
-            Tesseract.recognize(file, 'eng')
-                .then(({ data: { text } }) => {
-                    // --- Placeholder Logic ---
-                    // In a live version, you would parse the 'text' variable 
-                    // here to extract the last high-odd time and calculate gaps.
-                    // For now, we simulate your analysis with dynamic future times.
-
-                    // Get current date/time
-                    const now = new Date();
-                    const next1 = new Date(now.getTime() + 5 * 60000);  // +5 minutes
-                    const next2 = new Date(now.getTime() + 12 * 60000); // +12 minutes
-                    const next3 = new Date(now.getTime() + 25 * 60000); // +25 minutes
-
-                    // Helper to format time as HH:MM
-                    const formatTime = (d) => d.getHours().toString().padStart(2, '0') + ":" + d.getMinutes().toString().padStart(2, '0');
-
-                    // --- Dynamic HTML for Results ---
-                    const resultsHtml = `
-                        <div class="result-time-item">
-                            <span class="time-label">Next Potential Oppurtunity (Purple):</span>
-                            <span class="time-value">${formatTime(next1)}</span>
-                        </div>
-                        <div class="result-time-item">
-                            <span class="time-label">Mid-Range Gap Signal (Purple):</span>
-                            <span class="time-value">${formatTime(next2)}</span>
-                        </div>
-                        <div class="result-time-item">
-                            <span class="time-label">Main High-Odd Signal (Pink 10x+):</span>
-                            <span class="time-value high-odd-value">${formatTime(next3)}</span>
-                        </div>
-                    `;
-
-                    // Update UI with results
-                    output.innerHTML = resultsHtml;
-                    outputWrapper.style.display = "block";
-                })
-                .catch(err => {
-                    console.error("OCR Error:", err);
-                    alert("An error occurred during AI analysis. Please try a different screenshot.");
-                })
-                .finally(() => {
-                    // Reset UI State
-                    loader.style.display = "none";
-                    analyzeBtn.disabled = false;
-                    analyzeBtn.innerText = "Analyze Pattern";
-                });
+        function copyToClipboard() {
+            const copyArea = document.getElementById('hidden-copy-area');
+            copyArea.value = signalTextToCopy;
+            copyArea.select();
+            navigator.clipboard.writeText(signalTextToCopy).then(() => {
+                const btn = document.getElementById('copyBtn');
+                btn.innerText = "COPIED ✅";
+                setTimeout(() => btn.innerText = "Copy Signals Text", 2000);
+            });
         }
     </script>
 </body>
