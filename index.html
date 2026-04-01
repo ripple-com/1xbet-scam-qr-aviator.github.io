@@ -12,35 +12,24 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
         body {
-            background-color: #060608;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+            background-color: #060608; color: #ffffff;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; padding: 20px;
             background-image: radial-gradient(circle at 50% -20%, #1a1a24 0%, #060608 70%);
         }
         .premium-container {
-            background: rgba(16, 16, 20, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 28px;
-            width: 100%;
-            max-width: 520px;
-            padding: 40px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(15px);
+            background: rgba(16, 16, 20, 0.95); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 28px; width: 100%; max-width: 520px; padding: 40px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6); backdrop-filter: blur(15px);
         }
         .header { text-align: center; margin-bottom: 35px; }
         .brand-logo { font-size: 32px; font-weight: 700; letter-spacing: -1px; }
         .brand-logo span { color: #ff0040; text-shadow: 0 0 15px rgba(255, 0, 64, 0.5); }
         .sub-header { font-size: 11px; color: #9090a0; text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
         
-        /* Sections Visibility */
         #loginSection, #deviceVerifySection, #mainAppSection { display: none; }
         #loginSection { display: block; }
 
-        /* Form Styles */
         .input-group { margin-bottom: 20px; text-align: left; }
         .input-group label { display: block; font-size: 12px; color: #888; margin-bottom: 8px; }
         .input-group input { 
@@ -55,10 +44,9 @@
             color: white; border: none; padding: 18px; border-radius: 15px; width: 100%; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s;
         }
 
-        /* Device ID Box */
         .device-box {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; border: 1px solid rgba(255, 0, 64, 0.2);
+            background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 15px;
+            text-align: center; margin-bottom: 20px; border: 1px solid rgba(255, 0, 64, 0.2);
         }
         .device-id-text {
             font-family: 'Space Mono', monospace; font-size: 16px; color: #ff0040; display: block; margin: 10px 0; word-break: break-all;
@@ -66,18 +54,15 @@
         .status-loader { font-size: 13px; color: #00f2ff; margin-bottom: 10px; display: block; animation: blink 1.5s infinite; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-        /* Dashboard Styles */
         .file-label {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             border: 2px dashed rgba(255, 0, 64, 0.3); border-radius: 20px; padding: 30px; cursor: pointer; background: rgba(255, 255, 255, 0.02); color: #888; margin-bottom: 15px;
         }
         #outputWrapper { display: none; margin-top: 30px; }
         .result-card { background: rgba(255, 255, 255, 0.03); border-radius: 20px; padding: 25px; border: 1px solid rgba(255, 255, 255, 0.05); }
-        .signal-row { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
         .time-range { font-family: 'Space Mono', monospace; font-size: 20px; font-weight: 700; color: #fff; display: block; }
         .purple-text { color: #a333ff; }
         .pink-text { color: #ff0040; }
-        
         #hidden-copy-area { position: absolute; left: -9999px; }
     </style>
 </head>
@@ -119,13 +104,11 @@
                 </label>
                 <button class="action-btn" id="analyzeBtn" onclick="processImage()">Generate Signals</button>
             </div>
-
             <div id="outputWrapper">
                 <div class="result-card" id="outputContent"></div>
                 <button class="action-btn" id="copyBtn" onclick="copyToClipboard()" style="margin-top: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">Copy Signals Text</button>
             </div>
         </div>
-
         <textarea id="hidden-copy-area"></textarea>
     </div>
 
@@ -134,7 +117,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
     <script>
-        // Firebase Configuration
         const firebaseConfig = {
           apiKey: "AIzaSyBmLvGb0vXkJhKVKew1sYZpHuVPo-mHvjk",
           authDomain: "aviatorsignal-ff90c.firebaseapp.com",
@@ -151,50 +133,47 @@
         let MY_DEVICE_ID = "";
         let authUnsub = null;
 
-        // 1. පිටුව Load වූ විගස Universal ID එක සාදාගැනීම
+        // 1. පිටුව Load වූ සැනින් Universal ID එක සාදාගැනීම
         async function initApp() {
-            const fp = await FingerprintJS.load();
-            const result = await fp.get();
-            MY_DEVICE_ID = "ALPHA-" + result.visitorId.toUpperCase();
-            document.getElementById('displayDevID').innerText = MY_DEVICE_ID;
+            try {
+                const fp = await FingerprintJS.load();
+                const result = await fp.get();
+                MY_DEVICE_ID = "ALPHA-" + result.visitorId.toUpperCase();
+                document.getElementById('displayDevID').innerText = MY_DEVICE_ID;
+            } catch (e) {
+                document.getElementById('displayDevID').innerText = "ERROR GENERATING ID";
+            }
         }
         initApp();
 
-        // 2. Login ක්‍රියාවලිය
         async function handleLogin() {
             const email = document.getElementById('userEmail').value.trim();
             const pass = document.getElementById('userPass').value.trim();
-            if(!email || !pass) return alert("Please fill all fields");
+            if(!email || !pass) return alert("Fill all fields");
 
             try {
                 const userCred = await auth.signInWithEmailAndPassword(email, pass);
                 const uid = userCred.user.uid;
-
-                // UI එක මාරු කිරීම
                 document.getElementById('loginSection').style.display = 'none';
                 document.getElementById('deviceVerifySection').style.display = 'block';
 
-                // 3. REAL-TIME LISTENER - Admin ඇක්ටිව් කරන තෙක් බලා සිටී
+                // Real-time Listener - Admin ඇක්ටිව් කරන තෙක් බලා සිටී
                 authUnsub = db.collection("users").doc(uid).onSnapshot((doc) => {
                     if (doc.exists) {
                         const data = doc.data();
-                        const allowedDevices = data.allowed_devices || [];
-
-                        // Device එක ඇක්ටිව් නම් සහ කාලය ඉකුත් වී නැත්නම් ඔටෝම Dashboard යයි
-                        if (allowedDevices.includes(MY_DEVICE_ID)) {
+                        const allowed = data.allowed_devices || [];
+                        if (allowed.includes(MY_DEVICE_ID)) {
                             if (data.expiryDate && new Date(data.expiryDate) > new Date()) {
                                 enterDashboard();
                             }
                         }
                     }
                 });
-            } catch (err) {
-                alert("Login Failed: " + err.message);
-            }
+            } catch (err) { alert("Login Failed: " + err.message); }
         }
 
         function enterDashboard() {
-            if(authUnsub) authUnsub(); // Listener එක නතර කරයි
+            if(authUnsub) authUnsub(); 
             document.getElementById('deviceVerifySection').style.display = 'none';
             document.getElementById('mainAppSection').style.display = 'block';
             document.getElementById('dynamicSub').innerText = "AI Predictor Dashboard";
@@ -204,21 +183,16 @@
             navigator.clipboard.writeText(MY_DEVICE_ID).then(() => alert("Copied!"));
         }
 
-        // 4. Signal Processing Logic
         let signalTextToCopy = "";
         function processImage() {
             const file = document.getElementById('imageInput').files[0];
             if (!file) return alert("Upload screenshot!");
-            
             document.getElementById('analyzeBtn').innerText = "AI Analyzing...";
-            
             Tesseract.recognize(file, 'eng').then(() => {
                 const now = new Date();
                 const fmt = (m) => new Date(now.getTime() + m * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toLowerCase();
-                
                 const r1 = `${fmt(5)} – ${fmt(7)}`;
                 const r2 = `${fmt(15)} – ${fmt(18)}`;
-
                 document.getElementById('outputContent').innerHTML = `
                     <div class="signal-row"><span class="time-range">${r1}</span><span class="purple-text">Purple Opportunity</span></div>
                     <div class="signal-row"><span class="time-range">${r2}</span><span class="pink-text">High-Odd Signal</span></div>
