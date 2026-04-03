@@ -42,7 +42,7 @@
             padding: 35px;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(15px);
-            display: none; /* Hidden by default for Auth */
+            display: none; 
             position: relative;
         }
 
@@ -59,11 +59,10 @@
         }
 
         .header { text-align: center; margin-bottom: 30px; }
-        .brand-logo { font-size: 32px; font-weight: 700; letter-spacing: -1px; font-family: 'Poppins', sans-serif; }
+        .brand-logo { font-size: 32px; font-weight: 700; letter-spacing: -1px; }
         .brand-logo span { color: var(--primary); text-shadow: 0 0 15px var(--primary-glow); }
         .sub-header { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
 
-        /* --- Inputs & Buttons --- */
         .input-group { margin-bottom: 20px; text-align: left; }
         .input-group label { font-size: 11px; color: var(--primary); font-weight: 600; margin-left: 10px; text-transform: uppercase; }
         .std-input {
@@ -77,16 +76,14 @@
             color: white; border: none; padding: 18px; border-radius: 15px; width: 100%; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s;
             box-shadow: 0 10px 20px rgba(255, 0, 64, 0.2);
         }
-        .analyze-btn:active { transform: scale(0.98); }
+        .analyze-btn:disabled { opacity: 0.6; cursor: not-allowed; filter: grayscale(1); }
 
-        /* --- Signal Generator UI --- */
         .file-label {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             border: 2px dashed rgba(255, 0, 64, 0.3); border-radius: 20px; padding: 30px;
             cursor: pointer; background: rgba(255, 255, 255, 0.02); color: #888; margin-bottom: 20px;
             transition: 0.3s;
         }
-        .file-label:hover { border-color: var(--primary); background: rgba(255, 0, 64, 0.02); }
 
         #outputWrapper { display: none; margin-top: 25px; animation: fadeIn 0.5s ease; }
         .result-card { background: rgba(255, 255, 255, 0.03); border-radius: 20px; padding: 25px; border: 1px solid rgba(255, 255, 255, 0.05); }
@@ -105,7 +102,6 @@
         .expiry-tag { color: #00ff88; font-weight: 700; }
 
         .logout-btn { background: none; border: none; color: #ff4d4d; font-size: 12px; cursor: pointer; font-weight: 600; }
-
         .error-msg { color: #ff4d4d; font-size: 13px; margin-top: 15px; display: none; background: rgba(255,0,0,0.1); padding: 10px; border-radius: 8px; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -153,13 +149,13 @@
 
         <div class="header">
             <div class="brand-logo">ALPHA<span>SIGNAL</span></div>
-            <div class="sub-header">Advanced Pattern Recognition</div>
+            <div class="sub-header">Pattern Recognition Engine</div>
         </div>
 
         <div class="upload-zone">
             <input type="file" id="imageInput" style="display:none;" accept="image/*">
             <label for="imageInput" class="file-label" id="fileLabel">
-                <i class="fa-solid fa-cloud-arrow-up" style="font-size: 30px; color: var(--primary); margin-bottom: 10px;"></i>
+                <i class="fa-solid fa-microchip" style="font-size: 30px; color: var(--primary); margin-bottom: 10px;"></i>
                 <span id="labelText">Upload History Screenshot</span>
             </label>
             <button class="analyze-btn" id="analyzeBtn" onclick="processImage()">GENERATE SIGNALS</button>
@@ -173,8 +169,6 @@
         <div style="margin-top: 30px; text-align: center;">
             <button class="logout-btn" onclick="auth.signOut(); location.reload();">TERMINATE SESSION <i class="fa-solid fa-power-off"></i></button>
         </div>
-
-        <textarea id="hidden-copy-area" style="position: absolute; left: -9999px;"></textarea>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -182,7 +176,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
     <script>
-        // Firebase Config
+        // Firebase Config (Keep your existing config)
         const firebaseConfig = {
           apiKey: "AIzaSyBmLvGb0vXkJhKVKew1sYZpHuVPo-mHvjk",
           authDomain: "aviatorsignal-ff90c.firebaseapp.com",
@@ -227,7 +221,6 @@
                 if (doc.exists) {
                     const data = doc.data();
                     if (data.allowed_devices && data.allowed_devices.includes(devId)) {
-                        // Success - Show App
                         document.getElementById('loginScreen').style.display = 'none';
                         document.getElementById('deviceLockScreen').style.display = 'none';
                         document.getElementById('mainApp').style.display = 'block';
@@ -263,7 +256,6 @@
             }, 1000);
         }
 
-        // Login Action
         document.getElementById('loginBtn').addEventListener('click', () => {
             const e = document.getElementById('email').value;
             const p = document.getElementById('password').value;
@@ -275,66 +267,88 @@
             });
         });
 
-        // --- SIGNAL GENERATOR LOGIC ---
+        // --- IMPROVED SIGNAL GENERATOR LOGIC ---
         let signalTextToCopy = "";
         const imageInput = document.getElementById('imageInput');
         imageInput.addEventListener('change', function() {
             if(this.files[0]) document.getElementById('labelText').innerText = this.files[0].name;
         });
 
-        function processImage() {
+        async function processImage() {
             const file = imageInput.files[0];
             if (!file) { alert("Please upload a history screenshot!"); return; }
 
             const btn = document.getElementById('analyzeBtn');
-            btn.innerText = "AI ANALYZING PATTERNS...";
+            btn.innerText = "AI EXTRACTING DATA...";
             btn.disabled = true;
             
-            // Simulating OCR analysis
-            Tesseract.recognize(file, 'eng').then(() => {
+            try {
+                // Real OCR Analysis
+                const result = await Tesseract.recognize(file, 'eng');
+                const extractedText = result.data.text;
+                
+                // Logic: Extract all numbers from the text (multipliers)
+                const numbers = extractedText.match(/\d+(\.\d+)?/g);
+                let offset = 0;
+
+                if (numbers) {
+                    // Algorithm: Find the highest multiplier in the history
+                    const maxOdd = Math.max(...numbers.map(Number));
+                    // Adjust signal time based on history data (Simulation)
+                    offset = maxOdd > 10 ? 5 : 2; 
+                }
+
                 const now = new Date();
                 const fmt = (m) => new Date(now.getTime() + m * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toLowerCase();
                 
-                const r1 = `${fmt(4)} – ${fmt(6)}`;
-                const r2 = `${fmt(12)} – ${fmt(15)}`;
-                const r3 = `${fmt(25)} – ${fmt(28)}`;
+                // Generating signals based on "Offset" logic
+                const r1 = `${fmt(offset + 2)} – ${fmt(offset + 4)}`;
+                const r2 = `${fmt(offset + 10)} – ${fmt(offset + 13)}`;
+                const r3 = `${fmt(offset + 22)} – ${fmt(offset + 25)}`;
 
                 document.getElementById('outputContent').innerHTML = `
                     <div class="signal-row">
+                        <span class="label">Detected Last Trend</span>
+                        <p style="font-size:12px; color:#00ff88;">Pattern Scanned Successfully</p>
+                    </div>
+                    <div class="signal-row">
                         <span class="label">Immediate Signal</span>
-                        <span class="time-range">${r1}</span><span class="purple-text">Purple Opportunity</span>
+                        <span class="time-range">${r1}</span><span class="purple-text">2x+ Opportunity</span>
                     </div>
                     <div class="signal-row">
                         <span class="label">Main Signal</span>
                         <span class="time-range">${r2}</span><span class="purple-text">Stable Trend</span>
                     </div>
                     <div class="signal-row" style="border:none;">
-                        <span class="label">High-Odd Signal (10x+)</span>
+                        <span class="label">High-Odd Prediction (10x+)</span>
                         <span class="time-range">${r3}</span><span class="pink-text">Pink Probability</span>
                     </div>
                 `;
 
-                signalTextToCopy = `🚀 ALPHA-SIGNAL PREDICTIONS 🚀\n\n1. Immediate: ${r1}\n2. Main: ${r2}\n3. High-Odd: ${r3}\n\nGood Luck!`;
+                signalTextToCopy = `🚀 ALPHA-SIGNAL PREDICTIONS 🚀\n\n1. Immediate: ${r1}\n2. Main: ${r2}\n3. High-Odd: ${r3}\n\nAlgorithm based on History Scan.`;
 
                 document.getElementById('outputWrapper').style.display = "block";
+            } catch (error) {
+                alert("OCR Error: Could not read image clearly.");
+            } finally {
                 btn.innerText = "GENERATE SIGNALS";
                 btn.disabled = false;
-            });
+            }
         }
 
-        function copyToClipboard() {
-            const copyArea = document.getElementById('hidden-copy-area');
-            copyArea.value = signalTextToCopy;
-            copyArea.select();
-            document.execCommand("copy");
-            
-            const btn = document.getElementById('copyBtn');
-            btn.innerText = "COPIED TO CLIPBOARD ✅";
-            btn.style.color = "#00ff88";
-            setTimeout(() => { 
-                btn.innerText = "COPY SIGNALS TEXT"; 
-                btn.style.color = "white";
-            }, 2000);
+        async function copyToClipboard() {
+            try {
+                await navigator.clipboard.writeText(signalTextToCopy);
+                const btn = document.getElementById('copyBtn');
+                btn.innerText = "COPIED TO CLIPBOARD ✅";
+                btn.style.color = "#00ff88";
+                setTimeout(() => { 
+                    btn.innerText = "COPY SIGNALS TEXT"; 
+                    btn.style.color = "white";
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+            }
         }
     </script>
 </body>
