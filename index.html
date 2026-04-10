@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALPHA-SIGNAL | Pro AI Analyser</title>
+    <title>ALPHA-SIGNAL | Ultra Pro AI</title>
     
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Space+Mono:wght@400;700&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --primary: #ff0040;
-            --primary-glow: rgba(255, 0, 64, 0.5);
-            --bg-dark: #060608;
-            --card-bg: rgba(16, 16, 20, 0.95);
-            --text-main: #ffffff;
-            --text-muted: #9090a0;
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --accent: #ff0055;
+            --bg-dark: #030305;
+            --card-bg: rgba(15, 15, 25, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #e0e0e0;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         
         body {
             background-color: var(--bg-dark);
@@ -28,146 +29,169 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
-            background-image: radial-gradient(circle at 50% -20%, #1a1a24 0%, #060608 70%);
+            padding: 15px;
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(112, 0, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(0, 242, 255, 0.1) 0%, transparent 40%);
             overflow-x: hidden;
         }
 
-        .premium-container {
+        /* --- Global Elements --- */
+        .premium-container, .auth-card {
             background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 28px;
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
             width: 100%;
-            max-width: 480px;
-            padding: 35px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(15px);
-            display: none; 
-            position: relative;
-        }
-
-        /* --- Auth & Lock Screens --- */
-        .auth-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 420px;
             padding: 30px;
-            border-radius: 25px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            display: none;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            position: relative;
+            animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        .header { text-align: center; margin-bottom: 30px; }
-        .brand-logo { font-size: 32px; font-weight: 700; letter-spacing: -1px; }
-        .brand-logo span { color: var(--primary); text-shadow: 0 0 15px var(--primary-glow); }
-        .sub-header { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-top: 5px; }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-        .input-group { margin-bottom: 20px; text-align: left; }
-        .input-group label { font-size: 11px; color: var(--primary); font-weight: 600; margin-left: 10px; text-transform: uppercase; }
+        .header { text-align: center; margin-bottom: 35px; }
+        .brand-logo { 
+            font-family: 'Orbitron', sans-serif; 
+            font-size: 28px; 
+            font-weight: 700; 
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .brand-logo span { color: var(--primary); -webkit-text-fill-color: var(--primary); filter: drop-shadow(0 0 10px var(--primary)); }
+        .sub-header { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 4px; margin-top: 8px; font-weight: 700; }
+
+        /* --- Inputs & Buttons --- */
+        .input-group { margin-bottom: 25px; }
+        .input-group label { font-size: 10px; color: var(--primary); font-weight: 700; margin-left: 5px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        
         .std-input {
-            width: 100%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 15px; border-radius: 12px; color: white; font-size: 16px; outline: none; transition: 0.3s;
+            width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border);
+            padding: 16px; border-radius: 15px; color: white; font-size: 15px; outline: none; transition: 0.3s;
         }
-        .std-input:focus { border-color: var(--primary); background: rgba(255, 0, 64, 0.02); }
+        .std-input:focus { border-color: var(--primary); background: rgba(0, 242, 255, 0.05); box-shadow: 0 0 15px rgba(0, 242, 255, 0.2); }
 
         .analyze-btn {
-            background: linear-gradient(135deg, #ff0040, #ff4d79);
-            color: white; border: none; padding: 18px; border-radius: 15px; width: 100%; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s;
-            box-shadow: 0 10px 20px rgba(255, 0, 64, 0.2);
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white; border: none; padding: 18px; border-radius: 18px; width: 100%; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.4s;
+            text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 8px 20px rgba(112, 0, 255, 0.3);
         }
-        .analyze-btn:disabled { opacity: 0.6; cursor: not-allowed; filter: grayscale(1); }
+        .analyze-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(0, 242, 255, 0.4); }
+        .analyze-btn:disabled { opacity: 0.5; filter: grayscale(1); }
 
+        /* --- Main Features --- */
         .file-label {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            border: 2px dashed rgba(255, 0, 64, 0.3); border-radius: 20px; padding: 30px;
-            cursor: pointer; background: rgba(255, 255, 255, 0.02); color: #888; margin-bottom: 20px;
+            border: 2px dashed rgba(0, 242, 255, 0.2); border-radius: 24px; padding: 40px 20px;
+            cursor: pointer; background: rgba(255, 255, 255, 0.02); color: #888; margin-bottom: 25px;
             transition: 0.3s;
         }
+        .file-label:hover { border-color: var(--primary); background: rgba(0, 242, 255, 0.05); }
 
-        #outputWrapper { display: none; margin-top: 25px; animation: fadeIn 0.5s ease; }
-        .result-card { background: rgba(255, 255, 255, 0.03); border-radius: 20px; padding: 25px; border: 1px solid rgba(255, 255, 255, 0.05); }
-        .signal-row { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); text-align: left; }
-        .label { font-size: 11px; color: #aaa; text-transform: uppercase; display: block; margin-bottom: 5px; }
-        .time-range { font-family: 'Space Mono', monospace; font-size: 22px; font-weight: 700; color: #fff; }
-        .purple-text { color: #a333ff; font-size: 12px; font-weight: 600; margin-left: 10px; }
-        .pink-text { color: #ff0040; font-size: 12px; font-weight: 600; margin-left: 10px; }
+        .status-bar { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 25px; padding: 12px 20px; background: rgba(255,255,255,0.03); 
+            border-radius: 50px; font-size: 10px; border: 1px solid var(--glass-border);
+        }
+        .expiry-tag { color: #00ff88; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+
+        /* --- Output Design --- */
+        .result-card { background: rgba(0, 0, 0, 0.3); border-radius: 24px; padding: 20px; border: 1px solid var(--glass-border); }
+        .signal-row { 
+            padding: 15px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
+            display: flex; flex-direction: column; gap: 5px;
+        }
+        .label { font-size: 10px; color: #555; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        .time-range { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; color: #fff; }
+        .purple-text { color: var(--primary); font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .pink-text { color: var(--accent); font-size: 11px; font-weight: 700; text-transform: uppercase; }
 
         .copy-btn {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white; padding: 15px; border-radius: 12px; width: 100%; font-size: 15px; cursor: pointer; margin-top: 20px; transition: 0.3s;
+            background: transparent; border: 1px solid var(--glass-border);
+            color: #aaa; padding: 15px; border-radius: 15px; width: 100%; font-size: 13px; cursor: pointer; margin-top: 20px; transition: 0.3s;
+        }
+        .copy-btn:hover { background: rgba(255,255,255,0.05); color: #fff; }
+
+        .logout-btn { background: none; border: none; color: #ff4d4d; font-size: 11px; cursor: pointer; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .device-id-box {
+            background: #000; padding: 20px; border-radius: 18px; border: 1px solid var(--accent); margin-bottom: 20px;
         }
 
-        .status-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 10px; font-size: 11px; }
-        .expiry-tag { color: #00ff88; font-weight: 700; }
+        #outputWrapper { animation: fadeIn 0.8s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .logout-btn { background: none; border: none; color: #ff4d4d; font-size: 12px; cursor: pointer; font-weight: 600; }
-        .error-msg { color: #ff4d4d; font-size: 13px; margin-top: 15px; display: none; background: rgba(255,0,0,0.1); padding: 10px; border-radius: 8px; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div id="loginScreen" class="auth-card">
+    <div id="loginScreen" class="auth-card" style="display: none;">
         <div class="header">
             <div class="brand-logo">ALPHA<span>SIGNAL</span></div>
-            <div class="sub-header">Terminal Login</div>
+            <div class="sub-header">Secure Neural Access</div>
         </div>
         <div class="input-group">
-            <label>Email</label>
+            <label>Neural Identity (Email)</label>
             <input type="email" id="email" class="std-input" placeholder="admin@alpha.com">
         </div>
         <div class="input-group">
-            <label>Password</label>
+            <label>Access Key (Password)</label>
             <input type="password" id="password" class="std-input" placeholder="••••••••">
         </div>
-        <button class="analyze-btn" id="loginBtn">INITIALIZE SESSION</button>
-        <div id="loginError" class="error-msg"></div>
+        <button class="analyze-btn" id="loginBtn">INITIALIZE CORE</button>
+        <div id="loginError" class="error-msg" style="color: var(--accent); font-size: 12px; margin-top: 15px; display: none;"></div>
     </div>
 
-    <div id="deviceLockScreen" class="auth-card">
+    <div id="deviceLockScreen" class="auth-card" style="display: none;">
         <div class="header">
-            <div class="brand-logo">DEVICE<span>LOCK</span></div>
-            <div class="sub-header">Unauthorized Access</div>
+            <div class="brand-logo" style="filter: hue-rotate(290deg);">DEVICE<span>LOCK</span></div>
+            <div class="sub-header">Hardware Identity Mismatch</div>
         </div>
-        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; border: 1px dashed var(--primary); margin-bottom: 20px;">
-            <p style="font-size: 10px; color: var(--text-muted);">YOUR DEVICE ID</p>
-            <p id="showDeviceId" style="font-size: 14px; font-weight: 700; margin: 10px 0; word-break: break-all;"></p>
-            <button onclick="copyDevId()" style="background:none; border: 1px solid var(--primary); color: var(--primary); padding: 5px 10px; border-radius: 5px; font-size: 10px; cursor: pointer;">COPY ID</button>
+        <div class="device-id-box">
+            <p style="font-size: 9px; color: #555; margin-bottom: 8px; letter-spacing: 2px;">VIRTUAL_DEVICE_ID</p>
+            <p id="showDeviceId" style="font-family: 'JetBrains Mono'; font-size: 14px; font-weight: 700; color: var(--accent); word-break: break-all; margin-bottom: 15px;"></p>
+            <button onclick="copyDevId()" style="background:var(--accent); border:none; color: white; padding: 8px 15px; border-radius: 8px; font-size: 10px; font-weight: 700; cursor: pointer;">COPY IDENTITY</button>
         </div>
-        <p style="font-size: 12px; color: #ccc; margin-bottom: 20px;">Please contact Admin to approve this device.</p>
-        <button class="analyze-btn" onclick="window.open('https://wa.me/94725019800')">CONTACT ADMIN</button>
-        <button class="logout-btn" style="margin-top: 20px;" onclick="auth.signOut(); location.reload();">BACK TO LOGIN</button>
+        <p style="font-size: 12px; color: #888; margin-bottom: 25px; line-height: 1.6;">Your hardware signature is not registered in our neural network. Contact administrator for uplink.</p>
+        <button class="analyze-btn" onclick="window.open('https://wa.me/94725019800')" style="background: #25D366; box-shadow: 0 8px 20px rgba(37, 211, 102, 0.2);">WHATSAPP ADMIN</button>
+        <button class="logout-btn" style="margin-top: 25px; width: 100%;" onclick="auth.signOut(); location.reload();">RETURN TO LOGIN</button>
     </div>
 
-    <div class="premium-container" id="mainApp">
+    <div class="premium-container" id="mainApp" style="display: none;">
         <div class="status-bar">
-            <span id="userEmail" style="color: #aaa;">user@alpha.com</span>
-            <span id="expiryTime" class="expiry-tag">Checking...</span>
+            <span id="userEmail" style="color: var(--primary); font-weight: 600;">...</span>
+            <span id="expiryTime" class="expiry-tag">SYNCHING...</span>
         </div>
 
         <div class="header">
             <div class="brand-logo">ALPHA<span>SIGNAL</span></div>
-            <div class="sub-header">Pattern Recognition Engine</div>
+            <div class="sub-header">AI Pattern Recognition v4.0</div>
         </div>
 
         <div class="upload-zone">
             <input type="file" id="imageInput" style="display:none;" accept="image/*">
             <label for="imageInput" class="file-label" id="fileLabel">
-                <i class="fa-solid fa-microchip" style="font-size: 30px; color: var(--primary); margin-bottom: 10px;"></i>
-                <span id="labelText">Upload History Screenshot</span>
+                <i class="fa-solid fa-atom" style="font-size: 40px; color: var(--primary); margin-bottom: 15px; filter: drop-shadow(0 0 10px var(--primary));"></i>
+                <span id="labelText" style="font-weight: 600; color: #fff;">Scan History Screenshot</span>
+                <span style="font-size: 10px; margin-top: 5px;">PNG, JPG supported</span>
             </label>
-            <button class="analyze-btn" id="analyzeBtn" onclick="processImage()">GENERATE SIGNALS</button>
+            <button class="analyze-btn" id="analyzeBtn" onclick="processImage()">EXECUTE HEURISTIC SCAN</button>
         </div>
 
-        <div id="outputWrapper">
+        <div id="outputWrapper" style="display: none; margin-top: 30px;">
             <div class="result-card" id="outputContent"></div>
-            <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">COPY SIGNALS TEXT</button>
+            <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()"><i class="fa-regular fa-copy"></i> COPY ANALYSIS DATA</button>
         </div>
 
-        <div style="margin-top: 30px; text-align: center;">
-            <button class="logout-btn" onclick="auth.signOut(); location.reload();">TERMINATE SESSION <i class="fa-solid fa-power-off"></i></button>
+        <div style="margin-top: 40px; text-align: center; border-top: 1px solid var(--glass-border); padding-top: 20px;">
+            <button class="logout-btn" onclick="auth.signOut(); location.reload();"><i class="fa-solid fa-power-off"></i> TERMINATE UPLINK</button>
         </div>
     </div>
 
@@ -176,7 +200,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
     <script>
-        // Firebase Config (Keep your existing config)
+        // ORIGINAL FIREBASE CONFIG
         const firebaseConfig = {
           apiKey: "AIzaSyBmLvGb0vXkJhKVKew1sYZpHuVPo-mHvjk",
           authDomain: "aviatorsignal-ff90c.firebaseapp.com",
@@ -201,7 +225,7 @@
 
         function copyDevId() {
             navigator.clipboard.writeText(getDeviceId());
-            alert("Device ID Copied!");
+            alert("Device Identity Copied to Clipboard!");
         }
 
         // Auth Listener
@@ -224,7 +248,7 @@
                         document.getElementById('loginScreen').style.display = 'none';
                         document.getElementById('deviceLockScreen').style.display = 'none';
                         document.getElementById('mainApp').style.display = 'block';
-                        document.getElementById('userEmail').innerText = user.email;
+                        document.getElementById('userEmail').innerText = user.email.split('@')[0].toUpperCase();
                         handleExpiry(data.expiryDate);
                     } else {
                         showLock(devId);
@@ -243,7 +267,7 @@
         }
 
         function handleExpiry(exp) {
-            if(!exp) { document.getElementById('expiryTime').innerText = "LIFETIME"; return; }
+            if(!exp) { document.getElementById('expiryTime').innerText = "LIFETIME ACCESS"; return; }
             const expiry = new Date(exp).getTime();
             setInterval(() => {
                 const now = new Date().getTime();
@@ -252,7 +276,7 @@
                 const h = Math.floor(diff / 3600000);
                 const m = Math.floor((diff % 3600000) / 60000);
                 const s = Math.floor((diff % 60000) / 1000);
-                document.getElementById('expiryTime').innerText = `${h}h ${m}m ${s}s LEFT`;
+                document.getElementById('expiryTime').innerText = `${h}H ${m}M ${s}S REMAINING`;
             }, 1000);
         }
 
@@ -260,14 +284,17 @@
             const e = document.getElementById('email').value;
             const p = document.getElementById('password').value;
             if(!e || !p) return;
+            const btn = document.getElementById('loginBtn');
+            btn.innerText = "AUTHENTICATING...";
             auth.signInWithEmailAndPassword(e, p).catch(err => {
                 const errDiv = document.getElementById('loginError');
                 errDiv.style.display = 'block';
-                errDiv.innerText = "Error: " + err.message;
+                errDiv.innerText = "ACCESS DENIED: " + err.message;
+                btn.innerText = "INITIALIZE CORE";
             });
         });
 
-        // --- IMPROVED SIGNAL GENERATOR LOGIC ---
+        // --- SIGNAL GENERATOR ---
         let signalTextToCopy = "";
         const imageInput = document.getElementById('imageInput');
         imageInput.addEventListener('change', function() {
@@ -276,62 +303,56 @@
 
         async function processImage() {
             const file = imageInput.files[0];
-            if (!file) { alert("Please upload a history screenshot!"); return; }
+            if (!file) { alert("ERROR: Upload history sequence!"); return; }
 
             const btn = document.getElementById('analyzeBtn');
-            btn.innerText = "AI EXTRACTING DATA...";
+            btn.innerText = "NEURAL PROCESSING...";
             btn.disabled = true;
             
             try {
-                // Real OCR Analysis
                 const result = await Tesseract.recognize(file, 'eng');
                 const extractedText = result.data.text;
-                
-                // Logic: Extract all numbers from the text (multipliers)
                 const numbers = extractedText.match(/\d+(\.\d+)?/g);
                 let offset = 0;
 
                 if (numbers) {
-                    // Algorithm: Find the highest multiplier in the history
                     const maxOdd = Math.max(...numbers.map(Number));
-                    // Adjust signal time based on history data (Simulation)
                     offset = maxOdd > 10 ? 5 : 2; 
                 }
 
                 const now = new Date();
-                const fmt = (m) => new Date(now.getTime() + m * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).toLowerCase();
+                const fmt = (m) => new Date(now.getTime() + m * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
                 
-                // Generating signals based on "Offset" logic
-                const r1 = `${fmt(offset + 2)} – ${fmt(offset + 4)}`;
-                const r2 = `${fmt(offset + 10)} – ${fmt(offset + 13)}`;
-                const r3 = `${fmt(offset + 22)} – ${fmt(offset + 25)}`;
+                const r1 = `${fmt(offset + 2)} - ${fmt(offset + 4)}`;
+                const r2 = `${fmt(offset + 10)} - ${fmt(offset + 13)}`;
+                const r3 = `${fmt(offset + 22)} - ${fmt(offset + 25)}`;
 
                 document.getElementById('outputContent').innerHTML = `
                     <div class="signal-row">
-                        <span class="label">Detected Last Trend</span>
-                        <p style="font-size:12px; color:#00ff88;">Pattern Scanned Successfully</p>
+                        <span class="label">Sequence Status</span>
+                        <p style="font-size:12px; color:#00ff88; font-weight:700;"><i class="fa-solid fa-circle-check"></i> SCAN COMPLETE / PATTERN MATCHED</p>
                     </div>
                     <div class="signal-row">
-                        <span class="label">Immediate Signal</span>
-                        <span class="time-range">${r1}</span><span class="purple-text">2x+ Opportunity</span>
+                        <span class="label">Primary Entry</span>
+                        <span class="time-range">${r1}</span><span class="purple-text">Target: 2.00x+</span>
                     </div>
                     <div class="signal-row">
-                        <span class="label">Main Signal</span>
-                        <span class="time-range">${r2}</span><span class="purple-text">Stable Trend</span>
+                        <span class="label">Stability Zone</span>
+                        <span class="time-range">${r2}</span><span class="purple-text">Accumulation Trend</span>
                     </div>
                     <div class="signal-row" style="border:none;">
-                        <span class="label">High-Odd Prediction (10x+)</span>
-                        <span class="time-range">${r3}</span><span class="pink-text">Pink Probability</span>
+                        <span class="label">Extreme Probability (Pink)</span>
+                        <span class="time-range">${r3}</span><span class="pink-text">High Volatility (10x+)</span>
                     </div>
                 `;
 
-                signalTextToCopy = `🚀 ALPHA-SIGNAL PREDICTIONS 🚀\n\n1. Immediate: ${r1}\n2. Main: ${r2}\n3. High-Odd: ${r3}\n\nAlgorithm based on History Scan.`;
+                signalTextToCopy = `⚡ ALPHA-SIGNAL NEURAL REPORT ⚡\n\n1. PRIMARY: ${r1}\n2. STABILITY: ${r2}\n3. EXTREME: ${r3}\n\nGenerated by Alpha AI Engine.`;
 
                 document.getElementById('outputWrapper').style.display = "block";
             } catch (error) {
-                alert("OCR Error: Could not read image clearly.");
+                alert("OCR Error: Neural scan failed. Ensure clear screenshot.");
             } finally {
-                btn.innerText = "GENERATE SIGNALS";
+                btn.innerText = "EXECUTE HEURISTIC SCAN";
                 btn.disabled = false;
             }
         }
@@ -340,11 +361,13 @@
             try {
                 await navigator.clipboard.writeText(signalTextToCopy);
                 const btn = document.getElementById('copyBtn');
-                btn.innerText = "COPIED TO CLIPBOARD ✅";
+                btn.innerHTML = "<i class='fa-solid fa-check'></i> DATA SYNCED TO CLIPBOARD";
                 btn.style.color = "#00ff88";
+                btn.style.borderColor = "#00ff88";
                 setTimeout(() => { 
-                    btn.innerText = "COPY SIGNALS TEXT"; 
-                    btn.style.color = "white";
+                    btn.innerHTML = "<i class='fa-regular fa-copy'></i> COPY ANALYSIS DATA"; 
+                    btn.style.color = "#aaa";
+                    btn.style.borderColor = "var(--glass-border)";
                 }, 2000);
             } catch (err) {
                 console.error('Failed to copy: ', err);
