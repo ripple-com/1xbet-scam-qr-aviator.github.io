@@ -15,7 +15,7 @@
             --secondary: #7000ff;
             --accent: #ff0055;
             --bg-dark: #030305;
-            --card-bg: rgba(15, 15, 25, 0.9);
+            --card-bg: rgba(15, 15, 25, 0.8);
             --glass-border: rgba(255, 255, 255, 0.1);
             --text-main: #e0e0e0;
         }
@@ -36,6 +36,7 @@
             overflow-x: hidden;
         }
 
+        /* --- Global Elements --- */
         .premium-container, .auth-card {
             background: var(--card-bg);
             border: 1px solid var(--glass-border);
@@ -57,53 +58,22 @@
 
         /* --- RGB CIRCLE LOGO STYLE --- */
         .logo-container {
-            width: 130px; /* Outer border size */
-            height: 130px;
-            margin: 0 auto 25px auto; /* Centers the container */
-            border-radius: 50%; /* Makes outer circle */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            /* Static gradient placeholder before animation starts */
-            background: linear-gradient(0deg, #ff0055, #00f2ff, #7000ff, #ff0055); 
-            padding: 4px; /* Space for the border */
-            box-shadow: 0 0 25px rgba(0, 242, 255, 0.4);
-            overflow: hidden; /* Important for animation mask */
+            width: 130px; height: 130px; margin: 0 auto 25px auto;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            position: relative; padding: 4px; box-shadow: 0 0 25px rgba(0, 242, 255, 0.4); overflow: hidden;
         }
-
-        /* Spinning mask for the RGB border effect */
         .logo-container::before {
-            content: '';
-            position: absolute;
-            width: 200%; /* Wider than the container to spin */
-            height: 200%;
-            background: conic-gradient(
-                #ff0055, #ffdd00, #00ff88, #00f2ff, #7000ff, #ff0055
-            );
+            content: ''; position: absolute; width: 200%; height: 200%;
+            background: conic-gradient(#ff0055, #ffdd00, #00ff88, #00f2ff, #7000ff, #ff0055);
             animation: spinRGB 4s linear infinite;
         }
-
-        @keyframes spinRGB {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* Image styling within the circle */
-        .logo-img {
-            width: 122px; /* width of logo container - (padding * 2) */
-            height: 122px;
-            border-radius: 50%; /* Makes image round */
-            object-fit: cover; /* Prevents stretching */
-            border: 3px solid #000; /* Dark inner border to separate RGB and image */
-            position: relative; /* Sits above the spinning ::before element */
-            z-index: 1;
-        }
+        @keyframes spinRGB { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .logo-img { width: 122px; height: 122px; border-radius: 50%; object-fit: cover; border: 3px solid #000; position: relative; z-index: 1; }
 
         .header { text-align: center; margin-bottom: 35px; }
         .brand-logo { 
             font-family: 'Orbitron', sans-serif; 
-            font-size: 26px; 
+            font-size: 28px; 
             font-weight: 700; 
             letter-spacing: 2px;
             background: linear-gradient(to right, #fff, var(--primary));
@@ -113,6 +83,7 @@
         .brand-logo span { color: var(--primary); -webkit-text-fill-color: var(--primary); filter: drop-shadow(0 0 10px var(--primary)); }
         .sub-header { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 4px; margin-top: 8px; font-weight: 700; }
 
+        /* --- Inputs & Buttons --- */
         .input-group { margin-bottom: 25px; text-align: left; }
         .input-group label { font-size: 10px; color: var(--primary); font-weight: 700; margin-left: 5px; text-transform: uppercase; margin-bottom: 8px; display: block; }
         
@@ -128,19 +99,14 @@
             text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 8px 20px rgba(112, 0, 255, 0.3);
         }
         .analyze-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(0, 242, 255, 0.4); }
+        .analyze-btn:disabled { opacity: 0.5; filter: grayscale(1); }
 
-        /* Device ID Box Centering */
-        .device-id-box {
-            background: #000;
-            padding: 20px;
-            border-radius: 18px;
-            border: 1px solid var(--accent);
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
+        /* --- Main Features --- */
+        .file-label {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border: 2px dashed rgba(0, 242, 255, 0.2); border-radius: 24px; padding: 40px 20px;
+            cursor: pointer; background: rgba(255, 255, 255, 0.02); color: #888; margin-bottom: 25px;
+            transition: 0.3s;
         }
 
         .status-bar { 
@@ -150,49 +116,45 @@
         }
         .expiry-tag { color: #00ff88; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
 
-        .file-label {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            border: 2px dashed rgba(0, 242, 255, 0.2); border-radius: 24px; padding: 40px 20px;
-            cursor: pointer; background: rgba(255, 255, 255, 0.02); color: #888; margin-bottom: 25px;
-            transition: 0.3s;
-        }
-
-        .result-card { background: rgba(0, 0, 0, 0.3); border-radius: 24px; padding: 20px; border: 1px solid var(--glass-border); }
-        .signal-row { padding: 15px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; gap: 5px; text-align: left;}
-        .label { font-size: 10px; color: #555; text-transform: uppercase; font-weight: 700; }
+        .result-card { background: rgba(0, 0, 0, 0.3); border-radius: 24px; padding: 20px; border: 1px solid var(--glass-border); text-align: left; }
+        .signal-row { padding: 15px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; gap: 5px; }
         .time-range { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; color: #fff; }
-        .purple-text { color: var(--primary); font-size: 11px; font-weight: 700; }
-        .pink-text { color: var(--accent); font-size: 11px; font-weight: 700; }
-
+        
         .copy-btn {
             background: transparent; border: 1px solid var(--glass-border);
-            color: #aaa; padding: 15px; border-radius: 15px; width: 100%; font-size: 13px; cursor: pointer; margin-top: 20px; transition: 0.3s;
+            color: #aaa; padding: 15px; border-radius: 15px; width: 100%; font-size: 13px; cursor: pointer; margin-top: 20px;
         }
-        .logout-btn { background: none; border: none; color: #ff4d4d; font-size: 11px; cursor: pointer; font-weight: 700; text-transform: uppercase; margin-top: 20px;}
+
+        .logout-btn { background: none; border: none; color: #ff4d4d; font-size: 11px; cursor: pointer; font-weight: 700; text-transform: uppercase; }
+        
+        .device-id-box { background: #000; padding: 20px; border-radius: 18px; border: 1px solid var(--accent); margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
     </style>
 </head>
 <body>
 
+    <audio id="bgMusic" loop>
+        <source src="Aviator.mp3" type="audio/mpeg">
+    </audio>
+
     <div id="loginScreen" class="auth-card" style="display: none;">
-        
         <div class="logo-container">
             <img src="suwahas.png" alt="Logo" class="logo-img">
         </div>
-        
         <div class="header">
             <div class="brand-logo">ALPHA<span>SIGNAL</span></div>
             <div class="sub-header">Secure Neural Access</div>
         </div>
         <div class="input-group">
-            <label>Neural Identity</label>
+            <label>Neural Identity (Email)</label>
             <input type="email" id="email" class="std-input" placeholder="admin@alpha.com">
         </div>
         <div class="input-group">
-            <label>Access Key</label>
+            <label>Access Key (Password)</label>
             <input type="password" id="password" class="std-input" placeholder="••••••••">
         </div>
         <button class="analyze-btn" id="loginBtn">INITIALIZE CORE</button>
-        <div id="loginError" style="color: var(--accent); font-size: 12px; margin-top: 15px; display: none;"></div>
+        <div id="loginError" class="error-msg" style="color: var(--accent); font-size: 12px; margin-top: 15px; display: none;"></div>
     </div>
 
     <div id="deviceLockScreen" class="auth-card" style="display: none;">
@@ -203,35 +165,36 @@
         <div class="device-id-box">
             <p style="font-size: 9px; color: #555; margin-bottom: 8px; letter-spacing: 2px;">VIRTUAL_DEVICE_ID</p>
             <p id="showDeviceId" style="font-family: 'JetBrains Mono'; font-size: 14px; font-weight: 700; color: var(--accent); word-break: break-all; margin-bottom: 15px;"></p>
-            <button onclick="copyDevId()" style="background:var(--accent); border:none; color: white; padding: 10px 20px; border-radius: 8px; font-size: 10px; font-weight: 700; cursor: pointer;">COPY IDENTITY</button>
+            <button onclick="copyDevId()" style="background:var(--accent); border:none; color: white; padding: 8px 15px; border-radius: 8px; font-size: 10px; font-weight: 700; cursor: pointer;">COPY IDENTITY</button>
         </div>
-        <p style="font-size: 12px; color: #888; line-height: 1.6;">Your hardware signature is not registered. Contact admin for uplink.</p>
-        <button class="analyze-btn" onclick="window.open('https://wa.me/94725019800')" style="background: #25D366; margin-top: 20px;">WHATSAPP ADMIN</button>
-        <button class="logout-btn" onclick="auth.signOut(); location.reload();">BACK TO LOGIN</button>
+        <button class="analyze-btn" onclick="window.open('https://wa.me/94725019800')" style="background: #25D366;">WHATSAPP ADMIN</button>
+        <button class="logout-btn" style="margin-top: 25px; width: 100%;" onclick="auth.signOut(); location.reload();">RETURN TO LOGIN</button>
     </div>
 
     <div class="premium-container" id="mainApp" style="display: none;">
         <div class="status-bar">
             <span id="userEmail" style="color: var(--primary); font-weight: 600;">...</span>
-            <span id="expiryTime" class="expiry-tag">SYNC...</span>
+            <span id="expiryTime" class="expiry-tag">SYNCHING...</span>
         </div>
         <div class="header">
             <div class="brand-logo">ALPHA<span>SIGNAL</span></div>
-            <div class="sub-header">Pattern Recognition Engine</div>
+            <div class="sub-header">AI Pattern Recognition v4.0</div>
         </div>
         <div class="upload-zone">
             <input type="file" id="imageInput" style="display:none;" accept="image/*">
             <label for="imageInput" class="file-label" id="fileLabel">
                 <i class="fa-solid fa-atom" style="font-size: 40px; color: var(--primary); margin-bottom: 15px;"></i>
-                <span id="labelText" style="font-weight: 600; color: #fff;">Upload History Scan</span>
+                <span id="labelText" style="font-weight: 600; color: #fff;">Scan History Screenshot</span>
             </label>
             <button class="analyze-btn" id="analyzeBtn" onclick="processImage()">EXECUTE HEURISTIC SCAN</button>
         </div>
         <div id="outputWrapper" style="display: none; margin-top: 30px;">
             <div class="result-card" id="outputContent"></div>
-            <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">COPY ANALYSIS DATA</button>
+            <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()"><i class="fa-regular fa-copy"></i> COPY ANALYSIS DATA</button>
         </div>
-        <button class="logout-btn" onclick="auth.signOut(); location.reload();">TERMINATE SESSION</button>
+        <div style="margin-top: 40px; text-align: center; border-top: 1px solid var(--glass-border); padding-top: 20px;">
+            <button class="logout-btn" onclick="auth.signOut(); location.reload();">TERMINATE UPLINK</button>
+        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -251,6 +214,9 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        const music = document.getElementById('bgMusic');
+        function playMusic() { music.play().catch(e => console.log("Audio waiting for user.")); }
+
         function getDeviceId() {
             let id = localStorage.getItem("alpha_dev_id");
             if (!id) {
@@ -262,11 +228,11 @@
 
         function copyDevId() {
             navigator.clipboard.writeText(getDeviceId());
-            alert("Copied!");
+            alert("Device Identity Copied!");
         }
 
         auth.onAuthStateChanged(user => {
-            if (user) { checkAccess(user); } 
+            if (user) { checkAccess(user); playMusic(); } 
             else { 
                 document.getElementById('loginScreen').style.display = 'block';
                 document.getElementById('mainApp').style.display = 'none';
@@ -298,53 +264,57 @@
         }
 
         function handleExpiry(exp) {
-            if(!exp) { document.getElementById('expiryTime').innerText = "LIFETIME"; return; }
+            if(!exp) { document.getElementById('expiryTime').innerText = "LIFETIME ACCESS"; return; }
             const expiry = new Date(exp).getTime();
             setInterval(() => {
                 const now = new Date().getTime();
                 const diff = expiry - now;
-                if(diff <= 0) { auth.signOut(); location.reload(); }
                 const h = Math.floor(diff / 3600000);
                 const m = Math.floor((diff % 3600000) / 60000);
                 const s = Math.floor((diff % 60000) / 1000);
-                document.getElementById('expiryTime').innerText = `${h}H ${m}M ${s}S LEFT`;
+                document.getElementById('expiryTime').innerText = `${h}H ${m}M ${s}S REMAINING`;
             }, 1000);
         }
 
         document.getElementById('loginBtn').addEventListener('click', () => {
+            playMusic();
             const e = document.getElementById('email').value;
             const p = document.getElementById('password').value;
             if(!e || !p) return;
             auth.signInWithEmailAndPassword(e, p).catch(err => {
                 const errDiv = document.getElementById('loginError');
                 errDiv.style.display = 'block';
-                errDiv.innerText = "Error: " + err.message;
+                errDiv.innerText = "ACCESS DENIED: " + err.message;
             });
         });
 
         let signalTextToCopy = "";
         async function processImage() {
             const file = document.getElementById('imageInput').files[0];
-            if (!file) { alert("Upload Image!"); return; }
+            if (!file) { alert("Upload sequence!"); return; }
             const btn = document.getElementById('analyzeBtn');
             btn.innerText = "PROCESSING...";
+            btn.disabled = true;
             try {
-                // Keep the logic part from before (using Tesseract but returning simulation)
-                await Tesseract.recognize(file, 'eng');
+                const result = await Tesseract.recognize(file, 'eng');
+                const numbers = result.data.text.match(/\d+(\.\d+)?/g);
+                let offset = (numbers && Math.max(...numbers.map(Number)) > 10) ? 5 : 2;
                 const now = new Date();
                 const fmt = (m) => new Date(now.getTime() + m * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-                const r1 = `${fmt(3)} - ${fmt(5)}`;
-                const r2 = `${fmt(12)} - ${fmt(15)}`;
-                const r3 = `${fmt(25)} - ${fmt(28)}`;
+                const r1 = `${fmt(offset + 2)} - ${fmt(offset + 4)}`;
+                const r2 = `${fmt(offset + 10)} - ${fmt(offset + 13)}`;
+                const r3 = `${fmt(offset + 22)} - ${fmt(offset + 25)}`;
+
                 document.getElementById('outputContent').innerHTML = `
-                    <div class="signal-row"><span class="label">Entry 1</span><span class="time-range">${r1}</span><span class="purple-text">2x+ Match</span></div>
-                    <div class="signal-row"><span class="label">Entry 2</span><span class="time-range">${r2}</span><span class="purple-text">Stable Match</span></div>
-                    <div class="signal-row" style="border:none;"><span class="label">High Odd</span><span class="time-range">${r3}</span><span class="pink-text">10x+ Pink</span></div>
+                    <div class="signal-row"><span class="label">Primary Entry</span><span class="time-range">${r1}</span></div>
+                    <div class="signal-row"><span class="label">Stability Zone</span><span class="time-range">${r2}</span></div>
+                    <div class="signal-row" style="border:none;"><span class="label">Extreme Probability</span><span class="time-range">${r3}</span></div>
                 `;
-                signalTextToCopy = `SIGNAL REPORT:\n1: ${r1}\n2: ${r2}\n3: ${r3}`;
+                signalTextToCopy = `ALPHA REPORT:\n1. ${r1}\n2. ${r2}\n3. ${r3}`;
                 document.getElementById('outputWrapper').style.display = "block";
-            } catch (e) { alert("Error during scan"); }
+            } catch (error) { alert("Scan failed."); }
             btn.innerText = "EXECUTE HEURISTIC SCAN";
+            btn.disabled = false;
         }
 
         async function copyToClipboard() {
