@@ -55,11 +55,49 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* --- RGB CIRCLE LOGO STYLE --- */
+        .logo-container {
+            width: 130px; /* Outer border size */
+            height: 130px;
+            margin: 0 auto 25px auto; /* Centers the container */
+            border-radius: 50%; /* Makes outer circle */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            /* Static gradient placeholder before animation starts */
+            background: linear-gradient(0deg, #ff0055, #00f2ff, #7000ff, #ff0055); 
+            padding: 4px; /* Space for the border */
+            box-shadow: 0 0 25px rgba(0, 242, 255, 0.4);
+            overflow: hidden; /* Important for animation mask */
+        }
+
+        /* Spinning mask for the RGB border effect */
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            width: 200%; /* Wider than the container to spin */
+            height: 200%;
+            background: conic-gradient(
+                #ff0055, #ffdd00, #00ff88, #00f2ff, #7000ff, #ff0055
+            );
+            animation: spinRGB 4s linear infinite;
+        }
+
+        @keyframes spinRGB {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Image styling within the circle */
         .logo-img {
-            max-width: 120px;
-            height: auto;
-            margin-bottom: 15px;
-            filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.3));
+            width: 122px; /* width of logo container - (padding * 2) */
+            height: 122px;
+            border-radius: 50%; /* Makes image round */
+            object-fit: cover; /* Prevents stretching */
+            border: 3px solid #000; /* Dark inner border to separate RGB and image */
+            position: relative; /* Sits above the spinning ::before element */
+            z-index: 1;
         }
 
         .header { text-align: center; margin-bottom: 35px; }
@@ -136,7 +174,10 @@
 <body>
 
     <div id="loginScreen" class="auth-card" style="display: none;">
-        <img src="suwahas.png" alt="Logo" class="logo-img">
+        
+        <div class="logo-container">
+            <img src="suwahas.png" alt="Logo" class="logo-img">
+        </div>
         
         <div class="header">
             <div class="brand-logo">ALPHA<span>SIGNAL</span></div>
@@ -288,6 +329,7 @@
             const btn = document.getElementById('analyzeBtn');
             btn.innerText = "PROCESSING...";
             try {
+                // Keep the logic part from before (using Tesseract but returning simulation)
                 await Tesseract.recognize(file, 'eng');
                 const now = new Date();
                 const fmt = (m) => new Date(now.getTime() + m * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
@@ -301,7 +343,7 @@
                 `;
                 signalTextToCopy = `SIGNAL REPORT:\n1: ${r1}\n2: ${r2}\n3: ${r3}`;
                 document.getElementById('outputWrapper').style.display = "block";
-            } catch (e) { alert("Error"); }
+            } catch (e) { alert("Error during scan"); }
             btn.innerText = "EXECUTE HEURISTIC SCAN";
         }
 
