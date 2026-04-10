@@ -55,7 +55,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* RGB Circle Logo Container */
+        /* RGB Circle Logo Wrapper */
         .logo-container {
             width: 130px; height: 130px; margin: 0 auto 25px auto;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
@@ -92,9 +92,10 @@
             text-transform: uppercase; letter-spacing: 1px;
         }
 
+        /* DEVICE ID BOX CENTERED */
         .device-id-box {
             background: #000; padding: 20px; border-radius: 18px; border: 1px solid var(--accent);
-            margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
         }
 
         .status-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding: 12px 20px; background: rgba(255,255,255,0.03); border-radius: 50px; font-size: 10px; border: 1px solid var(--glass-border); }
@@ -131,7 +132,7 @@
             <input type="password" id="password" class="std-input" placeholder="••••••••">
         </div>
         <button class="analyze-btn" id="loginBtn">INITIALIZE CORE</button>
-        <div id="loginError" style="color: var(--accent); font-size: 12px; margin-top: 15px; display: none;"></div>
+        <div id="loginError" style="color: var(--accent); font-size: 12px; margin-top: 15px; display: none; text-align: center;"></div>
     </div>
 
     <div id="deviceLockScreen" class="auth-card" style="display: none;">
@@ -187,10 +188,9 @@
         const music = document.getElementById('bgMusic');
 
         function playMusic() {
-            music.play().catch(e => console.log("Interaction required for audio."));
+            music.play().catch(e => console.log("Audio needs user click."));
         }
 
-        // Login with Music
         document.getElementById('loginBtn').addEventListener('click', () => {
             playMusic();
             const e = document.getElementById('email').value;
@@ -251,7 +251,6 @@
             setInterval(() => {
                 const now = new Date().getTime();
                 const diff = new Date(exp).getTime() - now;
-                if(diff <= 0) location.reload();
                 const h = Math.floor(diff / 3600000);
                 const m = Math.floor((diff % 3600000) / 60000);
                 const s = Math.floor((diff % 60000) / 1000);
@@ -261,19 +260,17 @@
 
         async function processImage() {
             const file = document.getElementById('imageInput').files[0];
-            if (!file) { alert("Please select a file."); return; }
+            if (!file) return;
             const btn = document.getElementById('analyzeBtn');
             btn.innerText = "DECODING...";
             btn.disabled = true;
-
             try {
                 await Tesseract.recognize(file, 'eng');
                 const now = new Date();
                 const fmt = (m) => new Date(now.getTime() + m * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-                
                 document.getElementById('outputContent').innerHTML = `
-                    <div class="signal-row"><span style="color:#555;font-size:10px;text-transform:uppercase;">Entry 1</span><span class="time-range">${fmt(3)} - ${fmt(5)}</span><span style="color:var(--primary);font-size:11px;">2x+ Predicted</span></div>
-                    <div class="signal-row" style="border:none;"><span style="color:#555;font-size:10px;text-transform:uppercase;">High Odd</span><span class="time-range">${fmt(15)} - ${fmt(20)}</span><span style="color:var(--accent);font-size:11px;">10x+ Predicted</span></div>
+                    <div class="signal-row"><span style="color:#555;font-size:10px;">Entry 1</span><span class="time-range">${fmt(3)} - ${fmt(5)}</span></div>
+                    <div class="signal-row" style="border:none;"><span style="color:#555;font-size:10px;">High Odd</span><span class="time-range">${fmt(15)} - ${fmt(20)}</span></div>
                 `;
                 document.getElementById('outputWrapper').style.display = "block";
             } catch (e) { alert("Scan Failed."); }
@@ -281,7 +278,7 @@
             btn.disabled = false;
         }
 
-        function copyDevId() { navigator.clipboard.writeText(getDeviceId()); alert("Identity Copied!"); }
+        function copyDevId() { navigator.clipboard.writeText(getDeviceId()); alert("Copied!"); }
     </script>
 </body>
 </html>
