@@ -15,7 +15,7 @@
             --secondary: #7000ff;
             --accent: #ff0055;
             --bg-dark: #030305;
-            --card-bg: rgba(15, 15, 25, 0.8);
+            --card-bg: rgba(15, 15, 25, 0.9);
             --glass-border: rgba(255, 255, 255, 0.1);
             --text-main: #e0e0e0;
         }
@@ -36,7 +36,6 @@
             overflow-x: hidden;
         }
 
-        /* --- Global Elements --- */
         .premium-container, .auth-card {
             background: var(--card-bg);
             border: 1px solid var(--glass-border);
@@ -68,9 +67,8 @@
         .brand-logo span { color: var(--primary); -webkit-text-fill-color: var(--primary); filter: drop-shadow(0 0 10px var(--primary)); }
         .sub-header { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 4px; margin-top: 8px; font-weight: 700; }
 
-        /* --- Inputs & Buttons --- */
         .input-group { margin-bottom: 25px; }
-        .input-group label { font-size: 10px; color: var(--primary); font-weight: 700; margin-left: 5px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .input-group label { font-size: 10px; color: var(--primary); font-weight: 700; margin-left: 5px; text-transform: uppercase; margin-bottom: 8px; display: block; text-align: left; }
         
         .std-input {
             width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border);
@@ -86,14 +84,26 @@
         .analyze-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(0, 242, 255, 0.4); }
         .analyze-btn:disabled { opacity: 0.5; filter: grayscale(1); }
 
-        /* --- Main Features --- */
         .file-label {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             border: 2px dashed rgba(0, 242, 255, 0.2); border-radius: 24px; padding: 40px 20px;
             cursor: pointer; background: rgba(255, 255, 255, 0.02); color: #888; margin-bottom: 25px;
             transition: 0.3s;
         }
-        .file-label:hover { border-color: var(--primary); background: rgba(0, 242, 255, 0.05); }
+
+        /* --- DEVICE ID BOX CENTERED --- */
+        .device-id-box {
+            background: #000;
+            padding: 20px;
+            border-radius: 18px;
+            border: 1px solid var(--accent);
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
 
         .status-bar { 
             display: flex; justify-content: space-between; align-items: center; 
@@ -102,32 +112,21 @@
         }
         .expiry-tag { color: #00ff88; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
 
-        /* --- Output Design --- */
         .result-card { background: rgba(0, 0, 0, 0.3); border-radius: 24px; padding: 20px; border: 1px solid var(--glass-border); }
-        .signal-row { 
-            padding: 15px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
-            display: flex; flex-direction: column; gap: 5px;
-        }
+        .signal-row { padding: 15px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; gap: 5px; text-align: left;}
         .label { font-size: 10px; color: #555; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
         .time-range { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; color: #fff; }
-        .purple-text { color: var(--primary); font-size: 11px; font-weight: 700; text-transform: uppercase; }
-        .pink-text { color: var(--accent); font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .purple-text { color: var(--primary); font-size: 11px; font-weight: 700; }
+        .pink-text { color: var(--accent); font-size: 11px; font-weight: 700; }
 
         .copy-btn {
             background: transparent; border: 1px solid var(--glass-border);
             color: #aaa; padding: 15px; border-radius: 15px; width: 100%; font-size: 13px; cursor: pointer; margin-top: 20px; transition: 0.3s;
         }
-        .copy-btn:hover { background: rgba(255,255,255,0.05); color: #fff; }
-
-        .logout-btn { background: none; border: none; color: #ff4d4d; font-size: 11px; cursor: pointer; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .logout-btn { background: none; border: none; color: #ff4d4d; font-size: 11px; cursor: pointer; font-weight: 700; text-transform: uppercase; }
         
-        .device-id-box {
-            background: #000; padding: 20px; border-radius: 18px; border: 1px solid var(--accent); margin-bottom: 20px;
-        }
-
         #outputWrapper { animation: fadeIn 0.8s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
     </style>
 </head>
 <body>
@@ -138,15 +137,15 @@
             <div class="sub-header">Secure Neural Access</div>
         </div>
         <div class="input-group">
-            <label>Neural Identity (Email)</label>
+            <label>Neural Identity</label>
             <input type="email" id="email" class="std-input" placeholder="admin@alpha.com">
         </div>
         <div class="input-group">
-            <label>Access Key (Password)</label>
+            <label>Access Key</label>
             <input type="password" id="password" class="std-input" placeholder="••••••••">
         </div>
         <button class="analyze-btn" id="loginBtn">INITIALIZE CORE</button>
-        <div id="loginError" class="error-msg" style="color: var(--accent); font-size: 12px; margin-top: 15px; display: none;"></div>
+        <div id="loginError" style="color: var(--accent); font-size: 12px; margin-top: 15px; display: none; text-align: center;"></div>
     </div>
 
     <div id="deviceLockScreen" class="auth-card" style="display: none;">
@@ -157,9 +156,9 @@
         <div class="device-id-box">
             <p style="font-size: 9px; color: #555; margin-bottom: 8px; letter-spacing: 2px;">VIRTUAL_DEVICE_ID</p>
             <p id="showDeviceId" style="font-family: 'JetBrains Mono'; font-size: 14px; font-weight: 700; color: var(--accent); word-break: break-all; margin-bottom: 15px;"></p>
-            <button onclick="copyDevId()" style="background:var(--accent); border:none; color: white; padding: 8px 15px; border-radius: 8px; font-size: 10px; font-weight: 700; cursor: pointer;">COPY IDENTITY</button>
+            <button onclick="copyDevId()" style="background:var(--accent); border:none; color: white; padding: 10px 20px; border-radius: 8px; font-size: 10px; font-weight: 700; cursor: pointer;">COPY IDENTITY</button>
         </div>
-        <p style="font-size: 12px; color: #888; margin-bottom: 25px; line-height: 1.6;">Your hardware signature is not registered in our neural network. Contact administrator for uplink.</p>
+        <p style="font-size: 12px; color: #888; margin-bottom: 25px; line-height: 1.6; text-align: center;">Your hardware signature is not registered. Contact administrator for uplink.</p>
         <button class="analyze-btn" onclick="window.open('https://wa.me/94725019800')" style="background: #25D366; box-shadow: 0 8px 20px rgba(37, 211, 102, 0.2);">WHATSAPP ADMIN</button>
         <button class="logout-btn" style="margin-top: 25px; width: 100%;" onclick="auth.signOut(); location.reload();">RETURN TO LOGIN</button>
     </div>
@@ -180,18 +179,17 @@
             <label for="imageInput" class="file-label" id="fileLabel">
                 <i class="fa-solid fa-atom" style="font-size: 40px; color: var(--primary); margin-bottom: 15px; filter: drop-shadow(0 0 10px var(--primary));"></i>
                 <span id="labelText" style="font-weight: 600; color: #fff;">Scan History Screenshot</span>
-                <span style="font-size: 10px; margin-top: 5px;">PNG, JPG supported</span>
             </label>
-            <button class="analyze-btn" id="analyzeBtn" onclick="processImage()">EXECUTE HEURISTIC SCAN</button>
+            <button class="analyze-btn" id="analyzeBtn" onclick="processImage()">EXECUTE SCAN</button>
         </div>
 
         <div id="outputWrapper" style="display: none; margin-top: 30px;">
             <div class="result-card" id="outputContent"></div>
-            <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()"><i class="fa-regular fa-copy"></i> COPY ANALYSIS DATA</button>
+            <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">COPY ANALYSIS DATA</button>
         </div>
 
         <div style="margin-top: 40px; text-align: center; border-top: 1px solid var(--glass-border); padding-top: 20px;">
-            <button class="logout-btn" onclick="auth.signOut(); location.reload();"><i class="fa-solid fa-power-off"></i> TERMINATE UPLINK</button>
+            <button class="logout-btn" onclick="auth.signOut(); location.reload();">TERMINATE UPLINK</button>
         </div>
     </div>
 
@@ -200,7 +198,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
     <script>
-        // ORIGINAL FIREBASE CONFIG
         const firebaseConfig = {
           apiKey: "AIzaSyBmLvGb0vXkJhKVKew1sYZpHuVPo-mHvjk",
           authDomain: "aviatorsignal-ff90c.firebaseapp.com",
@@ -213,7 +210,6 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Device ID logic
         function getDeviceId() {
             let id = localStorage.getItem("alpha_dev_id");
             if (!id) {
@@ -225,14 +221,12 @@
 
         function copyDevId() {
             navigator.clipboard.writeText(getDeviceId());
-            alert("Device Identity Copied to Clipboard!");
+            alert("ID Copied!");
         }
 
-        // Auth Listener
         auth.onAuthStateChanged(user => {
-            if (user) {
-                checkAccess(user);
-            } else {
+            if (user) { checkAccess(user); } 
+            else { 
                 document.getElementById('loginScreen').style.display = 'block';
                 document.getElementById('mainApp').style.display = 'none';
                 document.getElementById('deviceLockScreen').style.display = 'none';
@@ -250,12 +244,8 @@
                         document.getElementById('mainApp').style.display = 'block';
                         document.getElementById('userEmail').innerText = user.email.split('@')[0].toUpperCase();
                         handleExpiry(data.expiryDate);
-                    } else {
-                        showLock(devId);
-                    }
-                } else {
-                    showLock(devId);
-                }
+                    } else { showLock(devId); }
+                } else { showLock(devId); }
             });
         }
 
@@ -267,7 +257,7 @@
         }
 
         function handleExpiry(exp) {
-            if(!exp) { document.getElementById('expiryTime').innerText = "LIFETIME ACCESS"; return; }
+            if(!exp) { document.getElementById('expiryTime').innerText = "LIFETIME"; return; }
             const expiry = new Date(exp).getTime();
             setInterval(() => {
                 const now = new Date().getTime();
@@ -276,7 +266,7 @@
                 const h = Math.floor(diff / 3600000);
                 const m = Math.floor((diff % 3600000) / 60000);
                 const s = Math.floor((diff % 60000) / 1000);
-                document.getElementById('expiryTime').innerText = `${h}H ${m}M ${s}S REMAINING`;
+                document.getElementById('expiryTime').innerText = `${h}H ${m}M ${s}S LEFT`;
             }, 1000);
         }
 
@@ -284,94 +274,40 @@
             const e = document.getElementById('email').value;
             const p = document.getElementById('password').value;
             if(!e || !p) return;
-            const btn = document.getElementById('loginBtn');
-            btn.innerText = "AUTHENTICATING...";
             auth.signInWithEmailAndPassword(e, p).catch(err => {
                 const errDiv = document.getElementById('loginError');
                 errDiv.style.display = 'block';
-                errDiv.innerText = "ACCESS DENIED: " + err.message;
-                btn.innerText = "INITIALIZE CORE";
+                errDiv.innerText = "Error: " + err.message;
             });
         });
 
-        // --- SIGNAL GENERATOR ---
         let signalTextToCopy = "";
-        const imageInput = document.getElementById('imageInput');
-        imageInput.addEventListener('change', function() {
-            if(this.files[0]) document.getElementById('labelText').innerText = this.files[0].name;
-        });
-
         async function processImage() {
-            const file = imageInput.files[0];
-            if (!file) { alert("ERROR: Upload history sequence!"); return; }
-
+            const file = document.getElementById('imageInput').files[0];
+            if (!file) { alert("Upload Image!"); return; }
             const btn = document.getElementById('analyzeBtn');
-            btn.innerText = "NEURAL PROCESSING...";
-            btn.disabled = true;
-            
+            btn.innerText = "SCANNING...";
             try {
                 const result = await Tesseract.recognize(file, 'eng');
-                const extractedText = result.data.text;
-                const numbers = extractedText.match(/\d+(\.\d+)?/g);
-                let offset = 0;
-
-                if (numbers) {
-                    const maxOdd = Math.max(...numbers.map(Number));
-                    offset = maxOdd > 10 ? 5 : 2; 
-                }
-
                 const now = new Date();
                 const fmt = (m) => new Date(now.getTime() + m * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-                
-                const r1 = `${fmt(offset + 2)} - ${fmt(offset + 4)}`;
-                const r2 = `${fmt(offset + 10)} - ${fmt(offset + 13)}`;
-                const r3 = `${fmt(offset + 22)} - ${fmt(offset + 25)}`;
-
+                const r1 = `${fmt(3)} - ${fmt(5)}`;
+                const r2 = `${fmt(12)} - ${fmt(15)}`;
+                const r3 = `${fmt(25)} - ${fmt(28)}`;
                 document.getElementById('outputContent').innerHTML = `
-                    <div class="signal-row">
-                        <span class="label">Sequence Status</span>
-                        <p style="font-size:12px; color:#00ff88; font-weight:700;"><i class="fa-solid fa-circle-check"></i> SCAN COMPLETE / PATTERN MATCHED</p>
-                    </div>
-                    <div class="signal-row">
-                        <span class="label">Primary Entry</span>
-                        <span class="time-range">${r1}</span><span class="purple-text">Target: 2.00x+</span>
-                    </div>
-                    <div class="signal-row">
-                        <span class="label">Stability Zone</span>
-                        <span class="time-range">${r2}</span><span class="purple-text">Accumulation Trend</span>
-                    </div>
-                    <div class="signal-row" style="border:none;">
-                        <span class="label">Extreme Probability (Pink)</span>
-                        <span class="time-range">${r3}</span><span class="pink-text">High Volatility (10x+)</span>
-                    </div>
+                    <div class="signal-row"><span class="label">Entry 1</span><span class="time-range">${r1}</span><span class="purple-text">2x+</span></div>
+                    <div class="signal-row"><span class="label">Entry 2</span><span class="time-range">${r2}</span><span class="purple-text">Stable</span></div>
+                    <div class="signal-row" style="border:none;"><span class="label">High Odd</span><span class="time-range">${r3}</span><span class="pink-text">10x+</span></div>
                 `;
-
-                signalTextToCopy = `⚡ ALPHA-SIGNAL NEURAL REPORT ⚡\n\n1. PRIMARY: ${r1}\n2. STABILITY: ${r2}\n3. EXTREME: ${r3}\n\nGenerated by Alpha AI Engine.`;
-
+                signalTextToCopy = `SIGNAL:\n1: ${r1}\n2: ${r2}\n3: ${r3}`;
                 document.getElementById('outputWrapper').style.display = "block";
-            } catch (error) {
-                alert("OCR Error: Neural scan failed. Ensure clear screenshot.");
-            } finally {
-                btn.innerText = "EXECUTE HEURISTIC SCAN";
-                btn.disabled = false;
-            }
+            } catch (e) { alert("Error"); }
+            btn.innerText = "EXECUTE SCAN";
         }
 
         async function copyToClipboard() {
-            try {
-                await navigator.clipboard.writeText(signalTextToCopy);
-                const btn = document.getElementById('copyBtn');
-                btn.innerHTML = "<i class='fa-solid fa-check'></i> DATA SYNCED TO CLIPBOARD";
-                btn.style.color = "#00ff88";
-                btn.style.borderColor = "#00ff88";
-                setTimeout(() => { 
-                    btn.innerHTML = "<i class='fa-regular fa-copy'></i> COPY ANALYSIS DATA"; 
-                    btn.style.color = "#aaa";
-                    btn.style.borderColor = "var(--glass-border)";
-                }, 2000);
-            } catch (err) {
-                console.error('Failed to copy: ', err);
-            }
+            await navigator.clipboard.writeText(signalTextToCopy);
+            alert("Copied!");
         }
     </script>
 </body>
