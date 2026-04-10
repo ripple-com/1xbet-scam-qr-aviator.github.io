@@ -47,6 +47,7 @@
             backdrop-filter: blur(20px);
             position: relative;
             animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            text-align: center;
         }
 
         @keyframes slideUp {
@@ -54,10 +55,17 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        .logo-img {
+            max-width: 120px;
+            height: auto;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.3));
+        }
+
         .header { text-align: center; margin-bottom: 35px; }
         .brand-logo { 
             font-family: 'Orbitron', sans-serif; 
-            font-size: 28px; 
+            font-size: 26px; 
             font-weight: 700; 
             letter-spacing: 2px;
             background: linear-gradient(to right, #fff, var(--primary));
@@ -67,8 +75,8 @@
         .brand-logo span { color: var(--primary); -webkit-text-fill-color: var(--primary); filter: drop-shadow(0 0 10px var(--primary)); }
         .sub-header { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 4px; margin-top: 8px; font-weight: 700; }
 
-        .input-group { margin-bottom: 25px; }
-        .input-group label { font-size: 10px; color: var(--primary); font-weight: 700; margin-left: 5px; text-transform: uppercase; margin-bottom: 8px; display: block; text-align: left; }
+        .input-group { margin-bottom: 25px; text-align: left; }
+        .input-group label { font-size: 10px; color: var(--primary); font-weight: 700; margin-left: 5px; text-transform: uppercase; margin-bottom: 8px; display: block; }
         
         .std-input {
             width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border);
@@ -82,16 +90,8 @@
             text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 8px 20px rgba(112, 0, 255, 0.3);
         }
         .analyze-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(0, 242, 255, 0.4); }
-        .analyze-btn:disabled { opacity: 0.5; filter: grayscale(1); }
 
-        .file-label {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            border: 2px dashed rgba(0, 242, 255, 0.2); border-radius: 24px; padding: 40px 20px;
-            cursor: pointer; background: rgba(255, 255, 255, 0.02); color: #888; margin-bottom: 25px;
-            transition: 0.3s;
-        }
-
-        /* --- DEVICE ID BOX CENTERED --- */
+        /* Device ID Box Centering */
         .device-id-box {
             background: #000;
             padding: 20px;
@@ -112,9 +112,16 @@
         }
         .expiry-tag { color: #00ff88; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
 
+        .file-label {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border: 2px dashed rgba(0, 242, 255, 0.2); border-radius: 24px; padding: 40px 20px;
+            cursor: pointer; background: rgba(255, 255, 255, 0.02); color: #888; margin-bottom: 25px;
+            transition: 0.3s;
+        }
+
         .result-card { background: rgba(0, 0, 0, 0.3); border-radius: 24px; padding: 20px; border: 1px solid var(--glass-border); }
         .signal-row { padding: 15px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); display: flex; flex-direction: column; gap: 5px; text-align: left;}
-        .label { font-size: 10px; color: #555; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        .label { font-size: 10px; color: #555; text-transform: uppercase; font-weight: 700; }
         .time-range { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; color: #fff; }
         .purple-text { color: var(--primary); font-size: 11px; font-weight: 700; }
         .pink-text { color: var(--accent); font-size: 11px; font-weight: 700; }
@@ -123,15 +130,14 @@
             background: transparent; border: 1px solid var(--glass-border);
             color: #aaa; padding: 15px; border-radius: 15px; width: 100%; font-size: 13px; cursor: pointer; margin-top: 20px; transition: 0.3s;
         }
-        .logout-btn { background: none; border: none; color: #ff4d4d; font-size: 11px; cursor: pointer; font-weight: 700; text-transform: uppercase; }
-        
-        #outputWrapper { animation: fadeIn 0.8s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .logout-btn { background: none; border: none; color: #ff4d4d; font-size: 11px; cursor: pointer; font-weight: 700; text-transform: uppercase; margin-top: 20px;}
     </style>
 </head>
 <body>
 
     <div id="loginScreen" class="auth-card" style="display: none;">
+        <img src="suwahas.png" alt="Logo" class="logo-img">
+        
         <div class="header">
             <div class="brand-logo">ALPHA<span>SIGNAL</span></div>
             <div class="sub-header">Secure Neural Access</div>
@@ -145,7 +151,7 @@
             <input type="password" id="password" class="std-input" placeholder="••••••••">
         </div>
         <button class="analyze-btn" id="loginBtn">INITIALIZE CORE</button>
-        <div id="loginError" style="color: var(--accent); font-size: 12px; margin-top: 15px; display: none; text-align: center;"></div>
+        <div id="loginError" style="color: var(--accent); font-size: 12px; margin-top: 15px; display: none;"></div>
     </div>
 
     <div id="deviceLockScreen" class="auth-card" style="display: none;">
@@ -158,39 +164,33 @@
             <p id="showDeviceId" style="font-family: 'JetBrains Mono'; font-size: 14px; font-weight: 700; color: var(--accent); word-break: break-all; margin-bottom: 15px;"></p>
             <button onclick="copyDevId()" style="background:var(--accent); border:none; color: white; padding: 10px 20px; border-radius: 8px; font-size: 10px; font-weight: 700; cursor: pointer;">COPY IDENTITY</button>
         </div>
-        <p style="font-size: 12px; color: #888; margin-bottom: 25px; line-height: 1.6; text-align: center;">Your hardware signature is not registered. Contact administrator for uplink.</p>
-        <button class="analyze-btn" onclick="window.open('https://wa.me/94725019800')" style="background: #25D366; box-shadow: 0 8px 20px rgba(37, 211, 102, 0.2);">WHATSAPP ADMIN</button>
-        <button class="logout-btn" style="margin-top: 25px; width: 100%;" onclick="auth.signOut(); location.reload();">RETURN TO LOGIN</button>
+        <p style="font-size: 12px; color: #888; line-height: 1.6;">Your hardware signature is not registered. Contact admin for uplink.</p>
+        <button class="analyze-btn" onclick="window.open('https://wa.me/94725019800')" style="background: #25D366; margin-top: 20px;">WHATSAPP ADMIN</button>
+        <button class="logout-btn" onclick="auth.signOut(); location.reload();">BACK TO LOGIN</button>
     </div>
 
     <div class="premium-container" id="mainApp" style="display: none;">
         <div class="status-bar">
             <span id="userEmail" style="color: var(--primary); font-weight: 600;">...</span>
-            <span id="expiryTime" class="expiry-tag">SYNCHING...</span>
+            <span id="expiryTime" class="expiry-tag">SYNC...</span>
         </div>
-
         <div class="header">
             <div class="brand-logo">ALPHA<span>SIGNAL</span></div>
-            <div class="sub-header">AI Pattern Recognition v4.0</div>
+            <div class="sub-header">Pattern Recognition Engine</div>
         </div>
-
         <div class="upload-zone">
             <input type="file" id="imageInput" style="display:none;" accept="image/*">
             <label for="imageInput" class="file-label" id="fileLabel">
-                <i class="fa-solid fa-atom" style="font-size: 40px; color: var(--primary); margin-bottom: 15px; filter: drop-shadow(0 0 10px var(--primary));"></i>
-                <span id="labelText" style="font-weight: 600; color: #fff;">Scan History Screenshot</span>
+                <i class="fa-solid fa-atom" style="font-size: 40px; color: var(--primary); margin-bottom: 15px;"></i>
+                <span id="labelText" style="font-weight: 600; color: #fff;">Upload History Scan</span>
             </label>
-            <button class="analyze-btn" id="analyzeBtn" onclick="processImage()">EXECUTE SCAN</button>
+            <button class="analyze-btn" id="analyzeBtn" onclick="processImage()">EXECUTE HEURISTIC SCAN</button>
         </div>
-
         <div id="outputWrapper" style="display: none; margin-top: 30px;">
             <div class="result-card" id="outputContent"></div>
             <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">COPY ANALYSIS DATA</button>
         </div>
-
-        <div style="margin-top: 40px; text-align: center; border-top: 1px solid var(--glass-border); padding-top: 20px;">
-            <button class="logout-btn" onclick="auth.signOut(); location.reload();">TERMINATE UPLINK</button>
-        </div>
+        <button class="logout-btn" onclick="auth.signOut(); location.reload();">TERMINATE SESSION</button>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -221,7 +221,7 @@
 
         function copyDevId() {
             navigator.clipboard.writeText(getDeviceId());
-            alert("ID Copied!");
+            alert("Copied!");
         }
 
         auth.onAuthStateChanged(user => {
@@ -286,28 +286,28 @@
             const file = document.getElementById('imageInput').files[0];
             if (!file) { alert("Upload Image!"); return; }
             const btn = document.getElementById('analyzeBtn');
-            btn.innerText = "SCANNING...";
+            btn.innerText = "PROCESSING...";
             try {
-                const result = await Tesseract.recognize(file, 'eng');
+                await Tesseract.recognize(file, 'eng');
                 const now = new Date();
                 const fmt = (m) => new Date(now.getTime() + m * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
                 const r1 = `${fmt(3)} - ${fmt(5)}`;
                 const r2 = `${fmt(12)} - ${fmt(15)}`;
                 const r3 = `${fmt(25)} - ${fmt(28)}`;
                 document.getElementById('outputContent').innerHTML = `
-                    <div class="signal-row"><span class="label">Entry 1</span><span class="time-range">${r1}</span><span class="purple-text">2x+</span></div>
-                    <div class="signal-row"><span class="label">Entry 2</span><span class="time-range">${r2}</span><span class="purple-text">Stable</span></div>
-                    <div class="signal-row" style="border:none;"><span class="label">High Odd</span><span class="time-range">${r3}</span><span class="pink-text">10x+</span></div>
+                    <div class="signal-row"><span class="label">Entry 1</span><span class="time-range">${r1}</span><span class="purple-text">2x+ Match</span></div>
+                    <div class="signal-row"><span class="label">Entry 2</span><span class="time-range">${r2}</span><span class="purple-text">Stable Match</span></div>
+                    <div class="signal-row" style="border:none;"><span class="label">High Odd</span><span class="time-range">${r3}</span><span class="pink-text">10x+ Pink</span></div>
                 `;
-                signalTextToCopy = `SIGNAL:\n1: ${r1}\n2: ${r2}\n3: ${r3}`;
+                signalTextToCopy = `SIGNAL REPORT:\n1: ${r1}\n2: ${r2}\n3: ${r3}`;
                 document.getElementById('outputWrapper').style.display = "block";
             } catch (e) { alert("Error"); }
-            btn.innerText = "EXECUTE SCAN";
+            btn.innerText = "EXECUTE HEURISTIC SCAN";
         }
 
         async function copyToClipboard() {
             await navigator.clipboard.writeText(signalTextToCopy);
-            alert("Copied!");
+            alert("Data Copied!");
         }
     </script>
 </body>
